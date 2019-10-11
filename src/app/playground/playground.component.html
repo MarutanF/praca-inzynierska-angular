@@ -1,0 +1,32 @@
+<h1>Playground</h1>
+
+<p> Bootstrap</p>
+<button type="button" class="btn btn-primary">Primary</button>
+
+<p> Bootstrap ngx</p>
+<p>
+  <button type="button" class="btn btn-outline-primary" (click)="isCollapsed = !isCollapsed"
+          [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+    Toggle
+  </button>
+</p>
+<div id="collapseExample" [ngbCollapse]="isCollapsed">
+  <div class="card">
+    <div class="card-body">
+      You can collapse this card by clicking Toggle
+    </div>
+  </div>
+</div>
+
+<p> Chart </p>
+<div>
+  <div>
+    <div style="display: block">
+      <canvas baseChart
+        [data]="doughnutChartData"
+        [labels]="doughnutChartLabels"
+        [chartType]="doughnutChartType">
+      </canvas>
+    </div>
+  </div>
+</div>
