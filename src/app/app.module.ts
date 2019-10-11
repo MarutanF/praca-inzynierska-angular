@@ -10,6 +10,7 @@ import { RatesComponent } from './rates/rates.component';
 import { CalculatorComponent } from './calculator/calculator.component';
 import { AlertsComponent } from './alerts/alerts.component';
 import { PlaygroundComponent } from './playground/playground.component';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PlaygroundComponent } from './playground/playground.component';
   imports: [
     BrowserModule,
     NgbModule,
-    ChartsModule
+    ChartsModule,
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
