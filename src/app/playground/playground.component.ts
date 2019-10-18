@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartType } from 'chart.js';
-import { MultiDataSet, Label } from 'ng2-charts';
+import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
+import { MultiDataSet, Label, Color } from 'ng2-charts';
 
 @Component({
   selector: 'app-playground',
@@ -9,26 +9,19 @@ import { MultiDataSet, Label } from 'ng2-charts';
 })
 export class PlaygroundComponent implements OnInit {
 
-  public isCollapsed = false;
-  public doughnutChartLabels: Label[] = ['Download Sales', 'In-Store Sales', 'Mail-Order Sales'];
-  public doughnutChartData: MultiDataSet = [
-    [350, 450, 100],
-    [50, 150, 120],
-    [250, 130, 70],
+  public lineChartData: ChartDataSets[] = [
+    { data: [1, 2, 3], label: 'Series A' }
   ];
-  public doughnutChartType: ChartType = 'doughnut';
+  public lineChartLabels: Label[] = ['Label1', 'Label2', 'Label3'];
+  public lineChartOptions: (ChartOptions & { annotation: any });
+  public lineChartColors: Color[];
+  public lineChartLegend = false;
+  public lineChartType = 'line';
+  public lineChartPlugins = [];
 
   constructor() { }
 
   ngOnInit() {
-  }
-
-  public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
-  }
-
-  public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
-    console.log(event, active);
   }
 
 }
