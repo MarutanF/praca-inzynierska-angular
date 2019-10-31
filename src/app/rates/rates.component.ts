@@ -11,9 +11,9 @@ import { NBPService } from '../services/nbp.service';
 export class RatesComponent implements OnInit {
 
   public lineChartData: ChartDataSets[] = [
-    { data: this.rateService.getData(1, 1, 1).values, label: 'Series A' }
+    { data: this.rateService.getExchangeRates(1, 1, 1).values, label: 'Series A' }
   ];
-  public lineChartLabels: Label[] = this.rateService.getData(1, 1, 1).dates;
+  public lineChartLabels: Label[] = this.rateService.getExchangeRates(1, 1, 1).dates;
   public lineChartOptions: (ChartOptions & { annotation: any });
   public lineChartColors: Color[];
   public lineChartLegend = false;
