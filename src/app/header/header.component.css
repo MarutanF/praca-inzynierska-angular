@@ -1,15 +1,22 @@
-#headerLogo{
+#headerLogo {
     padding: 0px;
     background-color: rgba(0, 0, 0, 0.03);
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 img {
-    padding: 0rem 0rem 0rem 0.5rem;
+    padding: 0rem 0rem 0rem 1rem;
 }
 
-#headerMenu{
-    padding: 0px;
+#headerMenu {
+    padding: 0rem 0rem 0rem 1rem;
     background-color: rgba(0, 0, 0, 0.03);
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+@media (min-width: 576px) {
+    .navbar-expand-sm .navbar-nav .nav-link {
+        padding-left: 0rem;
+        padding-right: 1rem;
+    }
 }
