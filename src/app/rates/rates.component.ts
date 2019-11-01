@@ -37,6 +37,7 @@ export class RatesComponent implements OnInit {
   // CURRENCIES
   public listOfCurrencies = [];
   public selectedCurrency = {};
+  public newestRate = 0.0;
 
   constructor(private rateService: NBPService) {
   }
@@ -51,7 +52,7 @@ export class RatesComponent implements OnInit {
     // DROPDOWN
     this.listOfCurrencies = this.rateService.getSortedAndGroupedCurrencyList();
     this.selectedCurrency = this.listOfCurrencies[0];
-
+    this.newestRate = exchangeRates.values[0];
   }
 
   onSelectedCurrencyChange($event) {
