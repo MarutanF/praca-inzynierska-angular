@@ -24,7 +24,7 @@
     <p>PLN</p>
 </span>
 
-<p> Selected object: {{selectedCurrency | json}} </p>
+<!-- <p> Selected object: {{selectedCurrency | json}} </p> -->
 
 <div id="charId">
     <canvas
@@ -41,5 +41,15 @@
 <br>
 
 <span id="controlPeriod">
-        <p>1</p>
-<br>
+    <p style="padding-right: 1rem;">Okres: </p>
+    <ul class="list-group">
+        <li
+            class="list-group-item"
+            *ngFor="let period of periodList"
+            [class.active]="period === selectedPeriod"
+            (click)="onSelectedPerion(period)"
+        >
+            {{ period }}
+        </li>
+    </ul>
+</span>

@@ -39,6 +39,17 @@ export class RatesComponent implements OnInit {
   public selectedCurrency = {};
   public newestRate = 0.0;
 
+  // PERIOD LIST
+  public periodList = [
+    '1 tyg',
+    '1 mies',
+    '6 mies',
+    '1 rok',
+    '5 lat',
+    'max'
+  ];
+  public selectedPeriod = this.periodList[0];
+
   constructor(private rateService: NBPService) {
   }
 
@@ -57,6 +68,10 @@ export class RatesComponent implements OnInit {
 
   onSelectedCurrencyChange($event) {
     console.log({ name: '(change)', value: $event });
+  }
+
+  onSelectedPerion(period) {
+    this.selectedPeriod = period;
   }
 
 }
