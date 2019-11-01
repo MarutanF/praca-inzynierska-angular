@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 import { MultiDataSet, Label, Color, BaseChartDirective } from 'ng2-charts';
 import { NBPService } from '../services/nbp.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-rates',
@@ -10,6 +11,8 @@ import { NBPService } from '../services/nbp.service';
 })
 export class RatesComponent implements OnInit {
 
+  // CHART
+  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
   public lineChartData: ChartDataSets[] = [
     { data: [1], label: 'SeriesA' }
   ];
@@ -18,7 +21,7 @@ export class RatesComponent implements OnInit {
     annotation: {},
   };
   public lineChartColors: Color[] = [
-    { 
+    {
       backgroundColor: 'rgba(148,159,177,0.2)',
       borderColor: 'rgba(148,159,177,1)',
       pointBackgroundColor: 'rgba(148,159,177,1)',
@@ -31,16 +34,28 @@ export class RatesComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+  // CURRENCIES
+  public listOfCurrencies = [];
+  public selectedCurrency = {};
 
   constructor(private rateService: NBPService) {
   }
 
   ngOnInit() {
-    let exchangeRates = this.rateService.getExchangeRates('USD',1,1);
+    // DATA FOR CHART
+    let exchangeRates = this.rateService.getExchangeRates('USD', 1, 1);
     this.lineChartData[0].data = exchangeRates.values;
     this.lineChartLabels = exchangeRates.dates;
     this.chart.update();
+
+    // DROPDOWN
+    this.listOfCurrencies = this.rateService.getSortedAndGroupedCurrencyList();
+    this.selectedCurrency = this.listOfCurrencies[0];
+
+  }
+
+  onSelectedCurrencyChange($event) {
+    console.log({ name: '(change)', value: $event });
   }
 
 }

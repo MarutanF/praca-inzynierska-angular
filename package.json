@@ -20,6 +20,8 @@
     "@angular/platform-browser-dynamic": "~8.2.9",
     "@angular/router": "~8.2.9",
     "@ng-bootstrap/ng-bootstrap": "^5.1.1",
+    "@ng-select/ng-option-highlight": "0.0.4",
+    "@ng-select/ng-select": "^3.3.0",
     "bootstrap": "^4.3.1",
     "chart.js": "^2.8.0",
     "jquery": "^3.4.1",

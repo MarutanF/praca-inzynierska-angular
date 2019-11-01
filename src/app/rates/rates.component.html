@@ -13,3 +13,24 @@
         [chartType]="lineChartType"
     ></canvas>
 </div>
+
+<ng-select
+    [items]="listOfCurrencies"
+    [(ngModel)]="selectedCurrency"
+    [clearable]="false"
+    bindLabel="name"
+    groupBy="groupCode"
+    (change)="onSelectedCurrencyChange($event)"
+>
+    <ng-template
+        ng-notfound-tmp
+        let-searchTerm="searchTerm"
+    >
+        <div class="ng-option disabled">
+            No data found for "{{searchTerm}}"
+        </div>
+    </ng-template>
+</ng-select>
+
+<br>
+Selected object: {{selectedCurrency | json}}

@@ -11,6 +11,9 @@ import { CalculatorComponent } from './calculator/calculator.component';
 import { AlertsComponent } from './alerts/alerts.component';
 import { PlaygroundComponent } from './playground/playground.component';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 
 @NgModule({
   declarations: [
@@ -26,7 +29,10 @@ import { AppRoutingModule } from './app-routing.module';
     BrowserModule,
     NgbModule,
     ChartsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    NgSelectModule,
+    NgOptionHighlightModule
   ],
   providers: [],
   bootstrap: [AppComponent]
