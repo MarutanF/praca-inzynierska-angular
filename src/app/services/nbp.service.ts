@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { delay } from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
 
 export interface Currency {
   code: string;
@@ -12,9 +13,10 @@ export interface Currency {
   providedIn: 'root'
 })
 export class NBPService {
+  apiURL: string = 'http://api.nbp.pl/api/';
   private listOfFavoriteCurrencies = ['EUR', 'USD'];
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getExchangeRates(code, startDate, endDate) {
     let getExchangeRates;
@@ -33,18 +35,45 @@ export class NBPService {
   }
 
   getCurrenciesList(): Observable<Currency[]> {
-    const currenciesList = getMockCurrencies();
-    return of(currenciesList).pipe(delay(500));
+
+    // const currenciesList = getMockCurrencies();
+    // return of(currenciesList).pipe(delay(500));
+
+    let testList = [];
+    this.http.get<any>(this.apiURL + 'exchangerates/tables/a/')
+    .pipe(
+        map((res: Response) => {
+          return res[0].rates;
+        }),
+        delay(1))
+      .subscribe(data => {
+        for (let i = 0; i < data.length; i++) {
+          testList.push({ code: data[i].code, name: data[i].currency })
+        }
+      });
+
+    console.log('Result:');
+    console.log(testList);
+
+    return of(testList).pipe(
+      delay(0),
+      delay(0)
+    );
+
   }
 
-  getSortedAndGroupedCurrencyList(): Observable<Currency[]> {
-    let currenciesList = this.getCurrenciesList();
+  getSortedAndGroupedCurrencyList(): Currency[] {
+    let currenciesList = [];
+    this.getCurrenciesList().subscribe(res => {
+      currenciesList = res;
+    });
     let groupedCurrenciesList = this.groupCurrenciesList(currenciesList);
     let groupedAndSortedCurrenciesList = this.sortCurrenciesList(groupedCurrenciesList);
+    console.log(groupedAndSortedCurrenciesList);
     return groupedAndSortedCurrenciesList;
   }
 
-  groupCurrenciesList(currenciesList) {
+  groupCurrenciesList(currenciesList): Currency[] {
     // add new property to object
     let groupedCurrenciesList = currenciesList.map(item => {
       // if currency code is in list of favorite currencies
@@ -58,7 +87,7 @@ export class NBPService {
     return groupedCurrenciesList;
   }
 
-  sortCurrenciesList(groupedCurrenciesList) {
+  sortCurrenciesList(groupedCurrenciesList): Currency[] {
     let groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
       if (a.groupCode === 'Favorite' && b.groupCode !== 'Favorite') {
         return -1;
