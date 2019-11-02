@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { iif } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { delay } from 'rxjs/operators';
+
+export interface Currency {
+  code: string;
+  name: string;
+  groupCode?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -24,20 +31,13 @@ export class NBPService {
     }
     return getExchangeRates;
   }
-  
-  getCurrenciesList() {
-    const currenciesList =
-      [
-        { name: 'dolar amerykański', code: 'USD' },
-        { name: 'dolar australijski', code: 'AUD' },
-        { name: 'euro', code: 'EUR' },
-        { name: 'polski zloty', code: 'PL' },
-        { name: 'awaluta', code: 'ADL' },
-      ];
-    return currenciesList;
+
+  getCurrenciesList(): Observable<Currency[]> {
+    const currenciesList = getMockCurrencies();
+    return of(currenciesList).pipe(delay(500));
   }
 
-  getSortedAndGroupedCurrencyList() {
+  getSortedAndGroupedCurrencyList(): Observable<Currency[]> {
     let currenciesList = this.getCurrenciesList();
     let groupedCurrenciesList = this.groupCurrenciesList(currenciesList);
     let groupedAndSortedCurrenciesList = this.sortCurrenciesList(groupedCurrenciesList);
@@ -48,7 +48,7 @@ export class NBPService {
     // add new property to object
     let groupedCurrenciesList = currenciesList.map(item => {
       // if currency code is in list of favorite currencies
-      if(this.listOfFavoriteCurrencies.some( el => item.code === el)){
+      if (this.listOfFavoriteCurrencies.some(el => item.code === el)) {
         item.groupCode = 'Favorite';
       } else {
         item.groupCode = item.name.charAt(0).toUpperCase();
@@ -59,17 +59,27 @@ export class NBPService {
   }
 
   sortCurrenciesList(groupedCurrenciesList) {
-    let groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a,b) => {
-      if(a.groupCode === 'Favorite' && b.groupCode !== 'Favorite'){
+    let groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
+      if (a.groupCode === 'Favorite' && b.groupCode !== 'Favorite') {
         return -1;
       }
-      if(a.groupCode !== 'Favorite' && b.groupCode === 'Favorite'){
+      if (a.groupCode !== 'Favorite' && b.groupCode === 'Favorite') {
         return 1;
       }
       return a.groupCode < b.groupCode ? -1 : a.groupCode > b.groupCode ? 1 : 0;
     });
     return groupedAndSortedCurrenciesList;
   }
+}
 
-
+function getMockCurrencies() {
+  const currenciesList =
+    [
+      { name: 'dolar amerykański', code: 'USD' },
+      { name: 'dolar australijski', code: 'AUD' },
+      { name: 'euro', code: 'EUR' },
+      { name: 'polski zloty', code: 'PL' },
+      { name: 'awaluta', code: 'ADL' },
+    ];
+  return currenciesList;
 }

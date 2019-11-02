@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
-import { MultiDataSet, Label, Color, BaseChartDirective } from 'ng2-charts';
-import { NBPService } from '../services/nbp.service';
-import { FormControl } from '@angular/forms';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Label, Color, BaseChartDirective } from 'ng2-charts';
+import { NBPService, Currency } from '../services/nbp.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-rates',
@@ -35,7 +35,7 @@ export class RatesComponent implements OnInit {
   public lineChartPlugins = [];
 
   // CURRENCIES
-  public listOfCurrencies = [];
+  public listOfCurrencies: Observable<Currency[]>;
   public selectedCurrency = {};
   public newestRate = 0.0;
 
@@ -61,7 +61,7 @@ export class RatesComponent implements OnInit {
     this.chart.update();
 
     // DROPDOWN
-    this.listOfCurrencies = this.rateService.getSortedAndGroupedCurrencyList();
+    this.listOfCurrencies = this.rateService.getCurrenciesList();
     this.selectedCurrency = this.listOfCurrencies[0];
     this.newestRate = exchangeRates.values[0];
   }

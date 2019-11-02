@@ -3,7 +3,7 @@
 <span id="controlId">
     <p>1</p>
     <ng-select
-        [items]="listOfCurrencies"
+        [items]="listOfCurrencies | async"
         [(ngModel)]="selectedCurrency"
         [clearable]="false"
         bindLabel="name"
