@@ -74,16 +74,18 @@ export class RatesComponent implements OnInit {
 
     // RATES CHART
     // let exchangeRates = this.rateService.getExchangeRates(this.selectedCurrency, this.selectedPeriod);
-    let exchangeRates = this.rateService.getExchangeRates({code: 'USD', name:'dolar', table:'a'}, this.selectedPeriod);
+    let exchangeRates = this.rateService.getExchangeRates({ code: 'USD', name: 'dolar', table: 'a' }, this.selectedPeriod);
     this.lineChartData[0].data = exchangeRates.values;
     this.lineChartLabels = exchangeRates.dates;
     this.newestRate = exchangeRates.values[0];
     this.chart.update();
 
-    this.rateService.getCurrentRateHttp({code: 'CAD', name:'dolar', table:'a'}).subscribe(
-      (value) => console.log(value)
-    );
+    // this.rateService.getCurrentRateHttp({code: 'CAD', name:'dolar', table:'a'}).subscribe(
+    //   (value) => console.log(value)
+    // );
 
+    console.log(this.periodService.getEndDate());
+    console.log(this.periodService.getStartDate({ label: 'max', id: 4 }));
     
 
   }
