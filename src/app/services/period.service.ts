@@ -64,4 +64,20 @@ export class PeriodService {
     }
     return stopDate.toISOString().slice(0, 10);
   }
+
+  getDatesArray(period: Period) {
+    let dateArray:Array<string> = [];
+    let startDate = this.getStartDate(period);
+    let endDate = this.getEndDate();
+    let dateMove = new Date(startDate);
+    let strDate = startDate;
+
+    while (strDate < endDate) {
+      strDate = dateMove.toISOString().slice(0, 10);
+      dateArray.push(strDate);
+      dateMove.setDate(dateMove.getDate() + 1);
+    };
+
+    return dateArray;
+  }
 }

@@ -84,9 +84,7 @@ export class RatesComponent implements OnInit {
     //   (value) => console.log(value)
     // );
 
-    console.log(this.periodService.getEndDate());
-    console.log(this.periodService.getStartDate({ label: 'max', id: 4 }));
-    
+    console.log(this.periodService.getDatesArray({ label: '', id: 5 }));
 
   }
 
