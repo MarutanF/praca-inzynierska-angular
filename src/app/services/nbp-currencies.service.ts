@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 export interface Currency {
   code: string;
   name: string;
+  table?: string;
   groupCode?: string;
 }
 
@@ -23,28 +24,21 @@ export class NBPCurrenciesService {
   getCurrenciesListHttp(): Observable<any> {
     let tableAResponse = this.http.get<any>(this.apiURL + this.apiTableA)
       .pipe(
-        map((res: Response) => {
+        map((res) => {
           return res[0].rates;
         }));
     let tableBResponse = this.http.get<any>(this.apiURL + this.apiTableB)
       .pipe(
-        map((res: Response) => {
+        map((res) => {
           return res[0].rates;
         }));
     return zip(tableAResponse, tableBResponse);
   }
 
-  getCurrenciesListFormatted(data: Array<any>): Array<Currency> {
-    let currenciesList: Array<Currency> = this.mapCurrenciesList(data);
+  getCurrenciesListFormatted(res: Array<any>): Array<Currency> {
+    let currenciesList: Array<Currency> = this.mapCurrenciesList(res);
     let groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);
     let groupedAndSortedCurrenciesList: Array<Currency> = this.sortCurrenciesList(groupedCurrenciesList);
-    return groupedAndSortedCurrenciesList;
-  }
-
-  getSortedAndGroupedCurrencyList(): Array<Currency> {
-    let currenciesList = this.getMockCurrencies();
-    let groupedCurrenciesList = this.groupCurrenciesList(currenciesList);
-    let groupedAndSortedCurrenciesList = this.sortCurrenciesList(groupedCurrenciesList);
     return groupedAndSortedCurrenciesList;
   }
 
@@ -52,7 +46,7 @@ export class NBPCurrenciesService {
     let mapedList = [];
     data = data[0].concat(data[1]); //flatmap because of zip in getCurrenciesListHttp
     for (let i = 0; i < data.length; i++) {
-      mapedList.push({ code: data[i].code, name: data[i].currency })
+      mapedList.push({ code: data[i].code, name: data[i].currency, table: data[i].table })
     }
     return mapedList;
   }

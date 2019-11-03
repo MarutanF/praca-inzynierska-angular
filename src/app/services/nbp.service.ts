@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
-
+import { Currency } from '../services/nbp-currencies.service';
+import { Period } from './period.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +13,9 @@ export class NBPService {
 
   constructor(private http: HttpClient) { }
 
-  getExchangeRates(code, startDate, endDate) {
+  getExchangeRates(currency: Currency, period: Period) {
     let getExchangeRates;
-    if (code === 'USD') {
+    if (currency.code === 'USD') {
       getExchangeRates = {
         dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
         values: [4.0152, 3.9652, 3.9469]
@@ -26,6 +27,15 @@ export class NBPService {
       };
     }
     return getExchangeRates;
+  }
+
+  getCurrentRateHttp(currency: Currency): Observable<any> {
+    let currentRate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/`)
+      .pipe(
+        map((res) => {
+          return res.rates[0].mid;
+        }));
+    return currentRate;
   }
 
 }

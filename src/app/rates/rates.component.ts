@@ -15,7 +15,7 @@ export class RatesComponent implements OnInit {
 
   // CURRENCIES DROPDOWN
   public listOfCurrencies: Currency[] = [];
-  public selectedCurrency = {};
+  public selectedCurrency: Currency;
   public newestRate = 0.0;
 
   // RATES CHART 
@@ -43,7 +43,7 @@ export class RatesComponent implements OnInit {
 
   // PERIOD LIST
   public periodList: Period[] = [];
-  public selectedPeriod = {};
+  public selectedPeriod: Period;
 
   constructor(
     private rateService: NBPService,
@@ -52,11 +52,10 @@ export class RatesComponent implements OnInit {
   }
 
   ngOnInit() {
-    // RATES CHART
-    let exchangeRates = this.rateService.getExchangeRates('USD', 1, 1);
-    this.lineChartData[0].data = exchangeRates.values;
-    this.lineChartLabels = exchangeRates.dates;
-    this.chart.update();
+
+    // PERIOD LIST 
+    this.periodList = this.periodService.getPeriods();
+    this.selectedPeriod = this.periodList[0];
 
     // CURRENCIES DROPDOWN
     this.currenciesService.getCurrenciesListHttp().subscribe(
@@ -65,30 +64,39 @@ export class RatesComponent implements OnInit {
         this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
         console.log(this.listOfCurrencies);
         this.selectedCurrency = this.listOfCurrencies[0];
-        this.newestRate = exchangeRates.values[0];
       },
       (error) => {
         console.log('Error - connection to NBP: ' + error);
         this.listOfCurrencies = this.currenciesService.getMockCurrencies();
         this.selectedCurrency = this.listOfCurrencies[0];
-        this.newestRate = exchangeRates.values[0];
       }
     );
 
-    // PERIOD LIST 
-    this.periodList = this.periodService.getPeriods();
-    this.selectedPeriod = this.periodList[0];
+    // RATES CHART
+    // let exchangeRates = this.rateService.getExchangeRates(this.selectedCurrency, this.selectedPeriod);
+    let exchangeRates = this.rateService.getExchangeRates({code: 'USD', name:'dolar', table:'a'}, this.selectedPeriod);
+    this.lineChartData[0].data = exchangeRates.values;
+    this.lineChartLabels = exchangeRates.dates;
+    this.newestRate = exchangeRates.values[0];
+    this.chart.update();
+
+    this.rateService.getCurrentRateHttp({code: 'CAD', name:'dolar', table:'a'}).subscribe(
+      (value) => console.log(value)
+    );
+
+    
+
   }
 
   onSelectedCurrencyChange($event) {
     console.log({ name: '(currencyChange)', newValue: $event });
-    let exchangeRates = this.rateService.getExchangeRates($event.code, 1, 1);
+    let exchangeRates = this.rateService.getExchangeRates(this.selectedCurrency, this.selectedPeriod);
     this.lineChartData[0].data = exchangeRates.values;
     this.chart.update();
   }
 
   onSelectedPeriodChange(period) {
-    console.log({ name: '(periodChange)', newValue: period});
+    console.log({ name: '(periodChange)', newValue: period });
     this.selectedPeriod = period;
   }
 
