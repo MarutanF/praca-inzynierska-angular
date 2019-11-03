@@ -34,8 +34,8 @@ export class RatesComponent implements OnInit {
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
-  // CURRENCIES
-  public listOfCurrencies: Observable<Currency[]>;
+  // CURRENCIES DROPDOWN
+  public listOfCurrencies: Currency[] = [];
   public selectedCurrency = {};
   public newestRate = 0.0;
 
@@ -60,10 +60,23 @@ export class RatesComponent implements OnInit {
     this.lineChartLabels = exchangeRates.dates;
     this.chart.update();
 
-    // DROPDOWN
-    this.listOfCurrencies = this.rateService.getCurrenciesList();
-    this.selectedCurrency = this.listOfCurrencies[0];
-    this.newestRate = exchangeRates.values[0];
+    // CURRENCIES DROPDOWN
+    this.rateService.getCurrenciesListHttp().subscribe(
+      (value) => {
+        console.log('Response - connection to NBP');
+        this.listOfCurrencies = this.rateService.getCurrenciesListFormatted(value);
+        console.log(this.listOfCurrencies);
+        this.selectedCurrency = this.listOfCurrencies[0];
+        this.newestRate = exchangeRates.values[0];
+      },
+      (error) => {
+        console.log('Error - connection to NBP: ' + error);
+        this.listOfCurrencies = this.rateService.getMockCurrencies();
+        this.selectedCurrency = this.listOfCurrencies[0];
+        this.newestRate = exchangeRates.values[0];
+      }
+    );
+
   }
 
   onSelectedCurrencyChange($event) {

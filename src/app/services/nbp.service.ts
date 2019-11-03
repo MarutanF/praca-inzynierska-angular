@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { Observable, zip } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 export interface Currency {
@@ -14,7 +14,9 @@ export interface Currency {
 })
 export class NBPService {
   apiURL: string = 'http://api.nbp.pl/api/';
-  private listOfFavoriteCurrencies = ['EUR', 'USD'];
+  apiTableA: string = 'exchangerates/tables/a/';
+  apiTableB: string = 'exchangerates/tables/b/';
+  private listOfFavoriteCurrencies = ['EUR', 'USD', 'CHF', 'GBP'];
 
   constructor(private http: HttpClient) { }
 
@@ -34,46 +36,44 @@ export class NBPService {
     return getExchangeRates;
   }
 
-  getCurrenciesList(): Observable<Currency[]> {
-
-    // const currenciesList = getMockCurrencies();
-    // return of(currenciesList).pipe(delay(500));
-
-    let testList = [];
-    this.http.get<any>(this.apiURL + 'exchangerates/tables/a/')
-    .pipe(
+  getCurrenciesListHttp(): Observable<any> {
+    let tableAResponse = this.http.get<any>(this.apiURL + this.apiTableA)
+      .pipe(
         map((res: Response) => {
           return res[0].rates;
-        }),
-        delay(1))
-      .subscribe(data => {
-        for (let i = 0; i < data.length; i++) {
-          testList.push({ code: data[i].code, name: data[i].currency })
-        }
-      });
-
-    console.log('Result:');
-    console.log(testList);
-
-    return of(testList).pipe(
-      delay(0),
-      delay(0)
-    );
-
+        }));
+    let tableBResponse = this.http.get<any>(this.apiURL + this.apiTableB)
+      .pipe(
+        map((res: Response) => {
+          return res[0].rates;
+        }));
+    return zip(tableAResponse, tableBResponse);
   }
 
-  getSortedAndGroupedCurrencyList(): Currency[] {
-    let currenciesList = [];
-    this.getCurrenciesList().subscribe(res => {
-      currenciesList = res;
-    });
-    let groupedCurrenciesList = this.groupCurrenciesList(currenciesList);
-    let groupedAndSortedCurrenciesList = this.sortCurrenciesList(groupedCurrenciesList);
-    console.log(groupedAndSortedCurrenciesList);
+  getCurrenciesListFormatted(data: Array<any>): Array<Currency> {
+    let currenciesList: Array<Currency> = this.mapCurrenciesList(data);
+    let groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);
+    let groupedAndSortedCurrenciesList: Array<Currency> = this.sortCurrenciesList(groupedCurrenciesList);
     return groupedAndSortedCurrenciesList;
   }
 
-  groupCurrenciesList(currenciesList): Currency[] {
+  getSortedAndGroupedCurrencyList(): Array<Currency> {
+    let currenciesList = this.getMockCurrencies();
+    let groupedCurrenciesList = this.groupCurrenciesList(currenciesList);
+    let groupedAndSortedCurrenciesList = this.sortCurrenciesList(groupedCurrenciesList);
+    return groupedAndSortedCurrenciesList;
+  }
+
+  mapCurrenciesList(data: Array<any>): Array<Currency> {
+    let mapedList = [];
+    data = data[0].concat(data[1]); //flatmap because of zip in getCurrenciesListHttp
+    for (let i = 0; i < data.length; i++) {
+      mapedList.push({ code: data[i].code, name: data[i].currency })
+    }
+    return mapedList;
+  }
+
+  groupCurrenciesList(currenciesList: Array<Currency>): Array<Currency> {
     // add new property to object
     let groupedCurrenciesList = currenciesList.map(item => {
       // if currency code is in list of favorite currencies
@@ -87,7 +87,7 @@ export class NBPService {
     return groupedCurrenciesList;
   }
 
-  sortCurrenciesList(groupedCurrenciesList): Currency[] {
+  sortCurrenciesList(groupedCurrenciesList: Array<Currency>): Array<Currency> {
     let groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
       if (a.groupCode === 'Favorite' && b.groupCode !== 'Favorite') {
         return -1;
@@ -99,16 +99,16 @@ export class NBPService {
     });
     return groupedAndSortedCurrenciesList;
   }
+
+  getMockCurrencies(): Array<Currency> {
+    const currenciesList =
+      [
+        { name: 'dolar amerykański', code: 'USD' },
+        { name: 'dolar australijski', code: 'AUD' },
+        { name: 'euro', code: 'EUR' },
+        { name: 'funt szterling', code: 'GBP' },
+      ];
+    return currenciesList;
+  }
 }
 
-function getMockCurrencies() {
-  const currenciesList =
-    [
-      { name: 'dolar amerykański', code: 'USD' },
-      { name: 'dolar australijski', code: 'AUD' },
-      { name: 'euro', code: 'EUR' },
-      { name: 'polski zloty', code: 'PL' },
-      { name: 'awaluta', code: 'ADL' },
-    ];
-  return currenciesList;
-}
