@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, Color, BaseChartDirective } from 'ng2-charts';
 import { Observable } from 'rxjs';
-import { NBPService } from '../services/nbp.service';
+import { NBPService, Rate } from '../services/nbp.service';
 import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
 import { PeriodService, Period } from '../services/period.service';
 
@@ -21,7 +21,7 @@ export class RatesComponent implements OnInit {
   // RATES CHART 
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
   public lineChartData: ChartDataSets[] = [
-    { data: [1], label: 'SeriesA' }
+    { data: [1], label: 'Rate' }
   ];
   public lineChartLabels: Label[] = ['L1'];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
@@ -58,52 +58,60 @@ export class RatesComponent implements OnInit {
     this.selectedPeriod = this.periodList[0];
 
     // CURRENCIES DROPDOWN
+    this.listOfCurrencies = this.currenciesService.getMockCurrencies();
+    this.selectedCurrency = this.listOfCurrencies[0];
     this.currenciesService.getCurrenciesListHttp().subscribe(
       (value) => {
-        console.log('Response - connection to NBP');
+        console.log('Response - connection to NBP with currencies: ');
         this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
         console.log(this.listOfCurrencies);
         this.selectedCurrency = this.listOfCurrencies[0];
       },
       (error) => {
-        console.log('Error - connection to NBP: ' + error);
-        this.listOfCurrencies = this.currenciesService.getMockCurrencies();
-        this.selectedCurrency = this.listOfCurrencies[0];
+        console.log('Error - connection to NBP with currencies: ' + error); // mock currencies will be displayed
       }
     );
 
+    // TEST VARIABLES
+    let testCurrency = { code: 'USD', name: 'dolar', table: 'a' };
+    let testPeriod = { label: '', id: 0 };
+
     // RATES CHART
-    // let exchangeRates = this.rateService.getExchangeRates(this.selectedCurrency, this.selectedPeriod);
-    let exchangeRates = this.rateService.getExchangeRates({ code: 'USD', name: 'dolar', table: 'a' }, this.selectedPeriod);
-    this.lineChartData[0].data = exchangeRates.values;
-    this.lineChartLabels = exchangeRates.dates;
-    this.newestRate = exchangeRates.values[0];
-    this.chart.update();
-
-    // this.rateService.getCurrentRateHttp({code: 'CAD', name:'dolar', table:'a'}).subscribe(
-    //   (value) => console.log(value)
-    // );
-
-    // console.log(this.periodService.getDatesArray({ label: '', id: 1 }));
-
-    this.rateService.getRateHttp({ code: 'USD', name: 'dolar', table: 'a' }, '2017-10-01').subscribe(
+    // TEST OF nbp-rates
+    let collectionOfResponses: Array<Rate> = [];
+    this.rateService.getRatesArrayHttp(this.selectedCurrency, this.selectedPeriod).subscribe(
       (value) => {
-        console.log('value');
-        console.log(value);
+        collectionOfResponses.push(value);
       },
       (error) => {
-        console.log('error');
-        console.log(error);
+        console.log('Error - connection to NBP with rates: ' + error); 
+        // let mockRates = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
+        // this.lineChartData[0].data = mockRates.values;
+        // this.lineChartLabels = mockRates.data;
+        // this.newestRate = mockRates.values;
+        // this.chart.update();      
+       },
+      () => {
+        console.log('Response - connection to NBP with rates: ');
+        console.log(collectionOfResponses);
+        collectionOfResponses.sort((a, b) => (a.date).localeCompare(b.date));
+        this.lineChartData[0].data = collectionOfResponses.map((value) => value.rate);
+        this.lineChartLabels = collectionOfResponses.map((value) => value.date);
+        this.newestRate = this.lineChartData[0].data[0];
+        this.chart.update();
       }
-    )
-
+    );
   }
 
   onSelectedCurrencyChange($event) {
     console.log({ name: '(currencyChange)', newValue: $event });
-    let exchangeRates = this.rateService.getExchangeRates(this.selectedCurrency, this.selectedPeriod);
-    this.lineChartData[0].data = exchangeRates.values;
-    this.chart.update();
+    // removeData(this.chart);
+    // let mockRates = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
+    // console.log(JSON.stringify(mockRates.values));
+    // this.lineChartData[0].data = [1,2,3];
+    // this.lineChartLabels = mockRates.data;
+    // this.newestRate = 1;
+    // this.chart.update();
   }
 
   onSelectedPeriodChange(period) {
@@ -111,4 +119,12 @@ export class RatesComponent implements OnInit {
     this.selectedPeriod = period;
   }
 
+}
+
+function removeData(chart) {
+  chart.data.labels.pop();
+  chart.data.datasets.forEach((dataset) => {
+      dataset.data.pop();
+  });
+  chart.update();
 }

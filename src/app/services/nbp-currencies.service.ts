@@ -81,10 +81,10 @@ export class NBPCurrenciesService {
   getMockCurrencies(): Array<Currency> {
     const currenciesList =
       [
-        { name: 'dolar amerykański', code: 'USD' },
-        { name: 'dolar australijski', code: 'AUD' },
-        { name: 'euro', code: 'EUR' },
-        { name: 'funt szterling', code: 'GBP' },
+        { name: 'dolar amerykański', code: 'USD', table: 'a' },
+        { name: 'dolar australijski', code: 'AUD', table: 'a' },
+        { name: 'euro', code: 'EUR', table: 'a' },
+        { name: 'funt szterling', code: 'GBP', table: 'a' },
       ];
     return currenciesList;
   }

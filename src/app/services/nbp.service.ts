@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, zip, empty, of } from 'rxjs';
-import { map, filter, catchError } from 'rxjs/operators';
+import { Observable, zip, empty, of, from } from 'rxjs';
+import { map, filter, catchError, mergeMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../services/nbp-currencies.service';
-import { Period } from './period.service';
+import { Period, PeriodService } from './period.service';
 
 export interface Rate {
   rate: number;
@@ -17,23 +17,9 @@ export interface Rate {
 export class NBPService {
   apiURL: string = 'http://api.nbp.pl/api/';
 
-  constructor(private http: HttpClient) { }
-
-  getExchangeRates(currency: Currency, period: Period) {
-    let getExchangeRates;
-    if (currency.code === 'USD') {
-      getExchangeRates = {
-        dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
-        values: [4.0152, 3.9652, 3.9469]
-      };
-    } else {
-      getExchangeRates = {
-        dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
-        values: [4.2, 5.9652, 4.9469]
-      };
-    }
-    return getExchangeRates;
-  }
+  constructor(
+    private http: HttpClient,
+    private periodService: PeriodService) { }
 
   getCurrentRateHttp(currency: Currency): Observable<any> {
     let currentRate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/`)
@@ -45,7 +31,7 @@ export class NBPService {
   }
 
   getRateHttp(currency: Currency, date: string): Observable<Rate> {
-    let rate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
+    let rate = this.http.get<any>(`${this.apiURL}exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
       .pipe(
         catchError(err => of('not found')), // catch and replace strategy
         map((res) => {
@@ -58,5 +44,28 @@ export class NBPService {
     return rate;
   }
 
+  getRatesArrayHttp(currency: Currency, period: Period): Observable<Rate> {
+    let arrayOfDates = this.periodService.getDatesArray(period);
+    let ratesArray = from(arrayOfDates).pipe(
+      mergeMap(date => this.getRateHttp(currency, date))
+    );
+    return ratesArray;
+  }
+
+  getMockRatesArray(currency: Currency, period: Period) {
+    let getExchangeRates;
+    if (currency.code === 'USD') {
+      getExchangeRates = {
+        dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
+        values: [1, 2, 3]
+      };
+    } else {
+      getExchangeRates = {
+        dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
+        values: [1, 2, 3]
+      };
+    }
+    return getExchangeRates;
+  }
 }
 
