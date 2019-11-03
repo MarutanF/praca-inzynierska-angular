@@ -1,9 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable, zip } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, zip, empty, of } from 'rxjs';
+import { map, filter, catchError } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../services/nbp-currencies.service';
 import { Period } from './period.service';
+
+export interface Rate {
+  rate: number;
+  date: string;
+  valid: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +42,20 @@ export class NBPService {
           return res.rates[0].mid;
         }));
     return currentRate;
+  }
+
+  getRateHttp(currency: Currency, date: string): Observable<Rate> {
+    let rate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
+      .pipe(
+        catchError(err => of('not found')), // catch and replace strategy
+        map((res) => {
+          if (res === 'not found') {
+            return { rate: 0, date: date, valid: false };
+          } else {
+            return { rate: res.rates[0].mid, date: date, valid: true };
+          }
+        }));
+    return rate;
   }
 
 }

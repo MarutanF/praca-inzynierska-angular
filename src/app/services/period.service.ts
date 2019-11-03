@@ -65,7 +65,7 @@ export class PeriodService {
     return stopDate.toISOString().slice(0, 10);
   }
 
-  getDatesArray(period: Period) {
+  getDatesArray(period: Period): Array<string> {
     let dateArray:Array<string> = [];
     let startDate = this.getStartDate(period);
     let endDate = this.getEndDate();

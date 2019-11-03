@@ -84,7 +84,18 @@ export class RatesComponent implements OnInit {
     //   (value) => console.log(value)
     // );
 
-    console.log(this.periodService.getDatesArray({ label: '', id: 5 }));
+    // console.log(this.periodService.getDatesArray({ label: '', id: 1 }));
+
+    this.rateService.getRateHttp({ code: 'USD', name: 'dolar', table: 'a' }, '2017-10-01').subscribe(
+      (value) => {
+        console.log('value');
+        console.log(value);
+      },
+      (error) => {
+        console.log('error');
+        console.log(error);
+      }
+    )
 
   }
 
