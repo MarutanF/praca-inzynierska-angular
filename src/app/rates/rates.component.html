@@ -1,6 +1,6 @@
 <p>Rates</p>
 
-<span id="controlId">
+<span id="currenciesDropdown">
     <p>1</p>
     <ng-select
         [items]="listOfCurrencies"
@@ -23,10 +23,9 @@
     <p> {{ newestRate }}</p>
     <p>PLN</p>
 </span>
-
 <!-- <p> Selected object: {{selectedCurrency | json}} </p> -->
 
-<div id="charId">
+<div id="ratesChart">
     <canvas
         baseChart
         [datasets]="lineChartData"
@@ -40,16 +39,16 @@
 
 <br>
 
-<span id="controlPeriod">
+<span id="periodList">
     <p style="padding-right: 1rem;">Okres: </p>
     <ul class="list-group">
         <li
             class="list-group-item"
             *ngFor="let period of periodList"
             [class.active]="period === selectedPeriod"
-            (click)="onSelectedPerion(period)"
+            (click)="onSelectedPeriodChange(period)"
         >
-            {{ period }}
+            {{ period.label }}
         </li>
     </ul>
 </span>
