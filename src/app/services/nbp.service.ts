@@ -62,8 +62,8 @@ export class NBPService {
       };
     } else {
       getExchangeRates = {
-        dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
-        values: [1, 2, 3]
+        dates: ['2019-10-02', '2019-10-03', '2019-10-04', '2019-10-05'],
+        values: [3, 2, 1, 5]
       };
     }
     return getExchangeRates;
