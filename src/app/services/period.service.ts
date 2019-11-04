@@ -10,7 +10,7 @@ export interface Period {
 })
 export class PeriodService {
   private periodList: Array<Period> = [];
-  private lastAvailableDate: string = '2001-01-02';
+  private lastAvailableDate = '2001-01-02';
 
   constructor() {
     this.periodList =
@@ -29,12 +29,12 @@ export class PeriodService {
   }
 
   getEndDate() {
-    let stopDate = new Date().toISOString().slice(0, 10);
+    const stopDate = new Date().toISOString().slice(0, 10);
     return stopDate;
   }
 
   getStartDate(period: Period) {
-    let actualDate: Date = new Date();
+    const actualDate: Date = new Date();
     let stopDate: Date = new Date();
     switch (period.id) {
       case 0: {
@@ -66,17 +66,17 @@ export class PeriodService {
   }
 
   getDatesArray(period: Period): Array<string> {
-    let dateArray:Array<string> = [];
-    let startDate = this.getStartDate(period);
-    let endDate = this.getEndDate();
-    let dateMove = new Date(startDate);
+    const dateArray: Array<string> = [];
+    const startDate = this.getStartDate(period);
+    const endDate = this.getEndDate();
+    const dateMove = new Date(startDate);
     let strDate = startDate;
 
     while (strDate < endDate) {
       strDate = dateMove.toISOString().slice(0, 10);
       dateArray.push(strDate);
       dateMove.setDate(dateMove.getDate() + 1);
-    };
+    }
 
     return dateArray;
   }

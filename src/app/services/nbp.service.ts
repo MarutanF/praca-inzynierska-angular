@@ -15,14 +15,14 @@ export interface Rate {
   providedIn: 'root'
 })
 export class NBPService {
-  apiURL: string = 'http://api.nbp.pl/api/';
+  apiURL = 'http://api.nbp.pl/api/';
 
   constructor(
     private http: HttpClient,
     private periodService: PeriodService) { }
 
   getCurrentRateHttp(currency: Currency): Observable<any> {
-    let currentRate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/`)
+    const currentRate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/`)
       .pipe(
         map((res) => {
           return res.rates[0].mid;
@@ -31,23 +31,23 @@ export class NBPService {
   }
 
   getRateHttp(currency: Currency, date: string): Observable<Rate> {
-    let rate = this.http.get<any>(`${this.apiURL}exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
+    const rate = this.http.get<any>(`${this.apiURL}exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
       .pipe(
         delay(1),
         catchError(err => of('not found')), // catch and replace strategy
         map((res) => {
           if (res === 'not found') {
-            return { rate: 0, date: date, valid: false };
+            return { rate: 0, date, valid: false };
           } else {
-            return { rate: res.rates[0].mid, date: date, valid: true };
+            return { rate: res.rates[0].mid, date, valid: true };
           }
         }));
     return rate;
   }
 
   getRatesArrayHttp(currency: Currency, period: Period): Observable<Rate> {
-    let arrayOfDates = this.periodService.getDatesArray(period);
-    let ratesArray = from(arrayOfDates).pipe(
+    const arrayOfDates = this.periodService.getDatesArray(period);
+    const ratesArray = from(arrayOfDates).pipe(
       concatMap(date => this.getRateHttp(currency, date))
     );
     return ratesArray;

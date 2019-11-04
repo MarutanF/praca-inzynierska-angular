@@ -14,20 +14,20 @@ export interface Currency {
   providedIn: 'root'
 })
 export class NBPCurrenciesService {
-  apiURL: string = 'http://api.nbp.pl/api/';
-  apiTableA: string = 'exchangerates/tables/a/';
-  apiTableB: string = 'exchangerates/tables/b/';
+  apiURL = 'http://api.nbp.pl/api/';
+  apiTableA = 'exchangerates/tables/a/';
+  apiTableB = 'exchangerates/tables/b/';
   private listOfFavoriteCurrencies = ['EUR', 'USD', 'CHF', 'GBP'];
 
   constructor(private http: HttpClient) { }
 
   getCurrenciesListHttp(): Observable<any> {
-    let tableAResponse = this.http.get<any>(this.apiURL + this.apiTableA)
+    const tableAResponse = this.http.get<any>(this.apiURL + this.apiTableA)
       .pipe(
         map((res) => {
           return res[0].rates;
         }));
-    let tableBResponse = this.http.get<any>(this.apiURL + this.apiTableB)
+    const tableBResponse = this.http.get<any>(this.apiURL + this.apiTableB)
       .pipe(
         map((res) => {
           return res[0].rates;
@@ -36,24 +36,24 @@ export class NBPCurrenciesService {
   }
 
   getCurrenciesListFormatted(res: Array<any>): Array<Currency> {
-    let currenciesList: Array<Currency> = this.mapCurrenciesList(res);
-    let groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);
-    let groupedAndSortedCurrenciesList: Array<Currency> = this.sortCurrenciesList(groupedCurrenciesList);
+    const currenciesList: Array<Currency> = this.mapCurrenciesList(res);
+    const groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);
+    const groupedAndSortedCurrenciesList: Array<Currency> = this.sortCurrenciesList(groupedCurrenciesList);
     return groupedAndSortedCurrenciesList;
   }
 
   mapCurrenciesList(data: Array<any>): Array<Currency> {
-    let mapedList = [];
-    data = data[0].concat(data[1]); //flatmap because of zip in getCurrenciesListHttp
+    const mapedList = [];
+    data = data[0].concat(data[1]); // flatmap because of zip in getCurrenciesListHttp
     for (let i = 0; i < data.length; i++) {
-      mapedList.push({ code: data[i].code, name: data[i].currency, table: data[i].table })
+      mapedList.push({ code: data[i].code, name: data[i].currency, table: data[i].table });
     }
     return mapedList;
   }
 
   groupCurrenciesList(currenciesList: Array<Currency>): Array<Currency> {
     // add new property to object
-    let groupedCurrenciesList = currenciesList.map(item => {
+    const groupedCurrenciesList = currenciesList.map(item => {
       // if currency code is in list of favorite currencies
       if (this.listOfFavoriteCurrencies.some(el => item.code === el)) {
         item.groupCode = 'Favorite';
@@ -66,7 +66,7 @@ export class NBPCurrenciesService {
   }
 
   sortCurrenciesList(groupedCurrenciesList: Array<Currency>): Array<Currency> {
-    let groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
+    const groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
       if (a.groupCode === 'Favorite' && b.groupCode !== 'Favorite') {
         return -1;
       }
