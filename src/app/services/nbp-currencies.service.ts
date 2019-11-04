@@ -1,7 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { HttpClient } from '@angular/common/http';
 
 export interface Currency {
   code: string;
@@ -44,9 +44,11 @@ export class NBPCurrenciesService {
 
   mapCurrenciesList(data: Array<any>): Array<Currency> {
     const mapedList = [];
-    data = data[0].concat(data[1]); // flatmap because of zip in getCurrenciesListHttp
-    for (let i = 0; i < data.length; i++) {
-      mapedList.push({ code: data[i].code, name: data[i].currency, table: data[i].table });
+    for (let i = 0; i < data[0].length; i++) {
+      mapedList.push({ code: data[0][i].code, name: data[0][i].currency, table: 'a' });
+    }
+    for (let i = 0; i < data[1].length; i++) {
+      mapedList.push({ code: data[1][i].code, name: data[1][i].currency, table: 'b' });
     }
     return mapedList;
   }

@@ -60,30 +60,48 @@ export class RatesComponent implements OnInit {
     // CURRENCIES DROPDOWN
     this.listOfCurrencies = this.currenciesService.getMockCurrencies();
     this.selectedCurrency = this.listOfCurrencies[0];
+    console.log('SEEELECTED CURRENCY');
+    console.log(this.selectedCurrency);
     this.currenciesService.getCurrenciesListHttp().subscribe(
       (value) => {
         console.log('Response - connection to NBP with currencies: ');
         this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
         console.log(this.listOfCurrencies);
         this.selectedCurrency = this.listOfCurrencies[0];
+        console.log('SEEELECTED CURRENCY2');
+        console.log(this.selectedCurrency);
       },
       (error) => {
-        console.log('Error - connection to NBP with currencies: ' + error); // mock currencies will be displayed
+        // mock currencies will be displayed
+        console.log('Error - connection to NBP with currencies: ' + error); 
       }
     );
 
-    // TEST VARIABLES
-    const testCurrency = { code: 'USD', name: 'dolar', table: 'a' };
-    const testPeriod = { label: '', id: 0 };
-
     // RATES CHART
-    // TEST OF nbp-rates
+    this.updateChartWithData();
+
+  }
+
+  onSelectedCurrencyChange($event) {
+    console.log({ name: '(currencyChange)', newValue: $event });
+    this.selectedCurrency = $event;
+    this.updateChartWithData();
+  }
+
+  onSelectedPeriodChange(period) {
+    console.log({ name: '(periodChange)', newValue: period });
+    this.selectedPeriod = period;
+    this.updateChartWithData();
+  }
+
+  updateChartWithData(){
     const collectionOfResponses: Array<Rate> = [];
     this.rateService.getRatesArrayHttp(this.selectedCurrency, this.selectedPeriod).subscribe(
       (value) => {
         collectionOfResponses.push(value);
       },
       (error) => {
+        // mock rates will be displayed
         console.log('Error - connection to NBP with rates: ' + error);
         const mockRatesArray = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
         console.log(mockRatesArray);
@@ -103,28 +121,4 @@ export class RatesComponent implements OnInit {
       }
     );
   }
-
-  onSelectedCurrencyChange($event) {
-    console.log({ name: '(currencyChange)', newValue: $event });
-    // removeData(this.chart);
-    const mockRatesArray = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
-    console.log(mockRatesArray);
-    this.lineChartData[0].data = mockRatesArray.values;
-    this.lineChartLabels = mockRatesArray.dates;
-    this.newestRate = mockRatesArray.values[0];
-    this.chart.update();
-  }
-
-  onSelectedPeriodChange(period) {
-    console.log({ name: '(periodChange)', newValue: period });
-    this.selectedPeriod = period;
-  }
-}
-
-function removeData(chart) {
-  chart.data.labels.pop();
-  chart.data.datasets.forEach((dataset) => {
-    dataset.data.pop();
-  });
-  chart.update();
 }
