@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, zip, empty, of, from } from 'rxjs';
-import { map, filter, catchError, mergeMap } from 'rxjs/operators';
+import { map, filter, catchError, mergeMap, delay, concatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../services/nbp-currencies.service';
 import { Period, PeriodService } from './period.service';
@@ -33,6 +33,7 @@ export class NBPService {
   getRateHttp(currency: Currency, date: string): Observable<Rate> {
     let rate = this.http.get<any>(`${this.apiURL}exchangerates/rates/${currency.table}/${currency.code}/${date}/`)
       .pipe(
+        delay(1),
         catchError(err => of('not found')), // catch and replace strategy
         map((res) => {
           if (res === 'not found') {
@@ -47,7 +48,7 @@ export class NBPService {
   getRatesArrayHttp(currency: Currency, period: Period): Observable<Rate> {
     let arrayOfDates = this.periodService.getDatesArray(period);
     let ratesArray = from(arrayOfDates).pipe(
-      mergeMap(date => this.getRateHttp(currency, date))
+      concatMap(date => this.getRateHttp(currency, date))
     );
     return ratesArray;
   }

@@ -55,7 +55,7 @@ export class RatesComponent implements OnInit {
 
     // PERIOD LIST 
     this.periodList = this.periodService.getPeriods();
-    this.selectedPeriod = this.periodList[0];
+    this.selectedPeriod = this.periodList[3];
 
     // CURRENCIES DROPDOWN
     this.listOfCurrencies = this.currenciesService.getMockCurrencies();
@@ -84,13 +84,13 @@ export class RatesComponent implements OnInit {
         collectionOfResponses.push(value);
       },
       (error) => {
-        console.log('Error - connection to NBP with rates: ' + error); 
+        console.log('Error - connection to NBP with rates: ' + error);
         // let mockRates = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
         // this.lineChartData[0].data = mockRates.values;
         // this.lineChartLabels = mockRates.data;
         // this.newestRate = mockRates.values;
-        // this.chart.update();      
-       },
+        // this.chart.update();
+      },
       () => {
         console.log('Response - connection to NBP with rates: ');
         console.log(collectionOfResponses);
@@ -124,7 +124,7 @@ export class RatesComponent implements OnInit {
 function removeData(chart) {
   chart.data.labels.pop();
   chart.data.datasets.forEach((dataset) => {
-      dataset.data.pop();
+    dataset.data.pop();
   });
   chart.update();
 }
