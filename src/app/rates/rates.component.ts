@@ -60,7 +60,6 @@ export class RatesComponent implements OnInit {
     // CURRENCIES DROPDOWN
     this.listOfCurrencies = this.currenciesService.getMockCurrencies();
     this.selectedCurrency = this.listOfCurrencies[0];
-    console.log('SEEELECTED CURRENCY');
     console.log(this.selectedCurrency);
     this.currenciesService.getCurrenciesListHttp().subscribe(
       (value) => {
@@ -68,18 +67,16 @@ export class RatesComponent implements OnInit {
         this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
         console.log(this.listOfCurrencies);
         this.selectedCurrency = this.listOfCurrencies[0];
-        console.log('SEEELECTED CURRENCY2');
         console.log(this.selectedCurrency);
       },
       (error) => {
         // mock currencies will be displayed
-        console.log('Error - connection to NBP with currencies: ' + error); 
+        console.log('Error - connection to NBP with currencies: ' + error);
       }
     );
 
     // RATES CHART
     this.updateChartWithData();
-
   }
 
   onSelectedCurrencyChange($event) {
@@ -94,8 +91,8 @@ export class RatesComponent implements OnInit {
     this.updateChartWithData();
   }
 
-  updateChartWithData(){
-    const collectionOfResponses: Array<Rate> = [];
+  updateChartWithData() {
+    let collectionOfResponses: Array<Rate> = [];
     this.rateService.getRatesArrayHttp(this.selectedCurrency, this.selectedPeriod).subscribe(
       (value) => {
         collectionOfResponses.push(value);
@@ -104,7 +101,6 @@ export class RatesComponent implements OnInit {
         // mock rates will be displayed
         console.log('Error - connection to NBP with rates: ' + error);
         const mockRatesArray = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
-        console.log(mockRatesArray);
         this.lineChartData[0].data = mockRatesArray.values;
         this.lineChartLabels = mockRatesArray.dates;
         this.newestRate = mockRatesArray.values[0];
@@ -114,9 +110,14 @@ export class RatesComponent implements OnInit {
         console.log('Response - connection to NBP with rates: ');
         console.log(collectionOfResponses);
         collectionOfResponses.sort((a, b) => (a.date).localeCompare(b.date));
-        this.lineChartData[0].data = collectionOfResponses.map((value) => value.rate);
         this.lineChartLabels = collectionOfResponses.map((value) => value.date);
-        this.newestRate = this.lineChartData[0].data[0];
+        collectionOfResponses = collectionOfResponses.filter(value => value.valid === true);
+        this.lineChartData[0].data = collectionOfResponses.map((value) => {
+          return {
+            y: value.rate, x: value.date
+          };
+        });
+        this.newestRate = collectionOfResponses.slice(-1)[0].rate;
         this.chart.update();
       }
     );
