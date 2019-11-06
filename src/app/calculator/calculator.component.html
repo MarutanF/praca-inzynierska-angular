@@ -7,7 +7,9 @@
             <div class="form-group">
                 <input
                     class="form-control"
+                    type="number"
                     [(ngModel)]="amountHave"
+                    (input)="onChangedAmountHave()"
                 >
             </div>
             <ng-select
@@ -40,7 +42,9 @@
             <div class="form-group">
                 <input
                     class="form-control"
+                    type="number"
                     [(ngModel)]="amountWant"
+                    (input)="onChangedAmountWant()"
                 >
             </div>
             <ng-select
@@ -66,4 +70,7 @@
 
 <br>
 
-<p> Some text </p>
+<p> {{ text1 }} </p>
+<p> {{ text2 }} </p>
+<p> {{ text3 }} </p>
+<p> {{ text4 }} </p>

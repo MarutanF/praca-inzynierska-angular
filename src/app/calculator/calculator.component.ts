@@ -16,6 +16,11 @@ export class CalculatorComponent implements OnInit {
   public amountWant: Number = 1;
   public selectedCurrencyWant: Currency;
 
+  public text1: string = "a";
+  public text2: string = "b";
+  public text3: string = "c";
+  public text4: string = "d";
+
   constructor(
     private rateService: NBPRatesService,
     private currenciesService: NBPCurrenciesService,
@@ -32,8 +37,16 @@ export class CalculatorComponent implements OnInit {
         console.log('Response - connection to NBP with currencies: ');
         this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
         this.listOfCurrencies = this.calculatorService.getCurrenciesListFormattedForCalculator(this.listOfCurrencies);
-        this.selectedCurrencyHave = this.listOfCurrencies[0];
-        this.selectedCurrencyWant = this.listOfCurrencies[1];
+        this.selectedCurrencyHave = this.listOfCurrencies[1];
+        this.selectedCurrencyWant = this.listOfCurrencies[2];
+
+        this.calculatorService.convertRate(this.selectedCurrencyHave, this.selectedCurrencyWant).subscribe(
+          (value) => {
+            this.amountHave = 1;
+            this.amountWant = 1 * value;
+          }
+        );
+
       },
       (error) => {
         // mock currencies will be displayed
@@ -45,7 +58,6 @@ export class CalculatorComponent implements OnInit {
   onSelectedCurrencyChangeHave($event) {
     console.log({ name: '(currencyChange)', newValue: $event });
     this.selectedCurrencyHave = $event;
-    console.log(this.amountHave);
   }
 
   onSelectedCurrencyChangeWant($event) {
@@ -53,7 +65,13 @@ export class CalculatorComponent implements OnInit {
     this.selectedCurrencyWant = $event;
   }
 
-  onChangedAmountHave(){
-    console.log({ name: '(onChangedAmountHave)', newValue: 1 });
+  onChangedAmountHave() {
+    console.log({ name: '(onChangedAmountHave)', newValue: this.amountHave });
   }
+
+  onChangedAmountWant() {
+    console.log({ name: '(onChangedAmountWant)', newValue: this.amountWant });
+  }
+
+
 }
