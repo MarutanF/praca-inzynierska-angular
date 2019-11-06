@@ -17,7 +17,7 @@ export class NBPCurrenciesService {
   apiURL = 'http://api.nbp.pl/api/';
   apiTableA = 'exchangerates/tables/a/';
   apiTableB = 'exchangerates/tables/b/';
-  private listOfFavoriteCurrencies = ['EUR', 'USD', 'CHF', 'GBP'];
+  private listOfFavoriteCurrencies = ['EUR', 'USD', 'CHF', 'GBP', 'PLN'];
 
   constructor(private http: HttpClient) { }
 
@@ -35,6 +35,7 @@ export class NBPCurrenciesService {
     return zip(tableAResponse, tableBResponse);
   }
 
+  // formatted for rates
   getCurrenciesListFormatted(res: Array<any>): Array<Currency> {
     const currenciesList: Array<Currency> = this.mapCurrenciesList(res);
     const groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);

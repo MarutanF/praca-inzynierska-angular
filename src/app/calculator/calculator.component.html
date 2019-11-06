@@ -1,1 +1,69 @@
 <p>Calculator</p>
+
+<div class="card">
+    <h5 class="card-header">Mam</h5>
+    <div class="card-body">
+        <span id="currenciesDropdownHave">
+            <div class="form-group">
+                <input
+                    class="form-control"
+                    [(ngModel)]="amountHave"
+                >
+            </div>
+            <ng-select
+                [items]="listOfCurrencies"
+                [(ngModel)]="selectedCurrencyHave"
+                [clearable]="false"
+                bindLabel="name"
+                groupBy="groupCode"
+                (change)="onSelectedCurrencyChangeHave($event)"
+            >
+                <ng-template
+                    ng-notfound-tmp
+                    let-searchTerm="searchTerm"
+                >
+                    <div class="ng-option disabled">
+                        No data found for "{{searchTerm}}"
+                    </div>
+                </ng-template>
+            </ng-select>
+        </span>
+    </div>
+</div>
+
+<br>
+
+<div class="card">
+    <h5 class="card-header">Chce</h5>
+    <div class="card-body">
+        <span id="currenciesDropdownWant">
+            <div class="form-group">
+                <input
+                    class="form-control"
+                    [(ngModel)]="amountWant"
+                >
+            </div>
+            <ng-select
+                [items]="listOfCurrencies"
+                [(ngModel)]="selectedCurrencyWant"
+                [clearable]="false"
+                bindLabel="name"
+                groupBy="groupCode"
+                (change)="onSelectedCurrencyChangeWant($event)"
+            >
+                <ng-template
+                    ng-notfound-tmp
+                    let-searchTerm="searchTerm"
+                >
+                    <div class="ng-option disabled">
+                        No data found for "{{searchTerm}}"
+                    </div>
+                </ng-template>
+            </ng-select>
+        </span>
+    </div>
+</div>
+
+<br>
+
+<p> Some text </p>

@@ -1,0 +1,20 @@
+.ng-select {
+    width: 25%;
+}
+
+.form-group {
+    width: 20%;
+}
+
+.form-control {
+    height: 35px;
+}
+
+#currenciesDropdownHave, #currenciesDropdownWant {
+    width: 100%;
+}
+
+#currenciesDropdownHave *, #currenciesDropdownWant * {
+    display: inline-block;
+    padding-right: 1rem;
+}

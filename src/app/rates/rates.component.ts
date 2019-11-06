@@ -28,9 +28,9 @@ export class RatesComponent implements OnInit {
   };
   public lineChartColors: Color[] = [
     {
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
+      backgroundColor: 'rgba(248,249,250,0.5)',
+      borderColor: 'rgba(128,128,128,1)',
+      pointBackgroundColor: '#007bff',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
