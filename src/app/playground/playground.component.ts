@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 import { MultiDataSet, Label, Color, BaseChartDirective } from 'ng2-charts';
-import { NBPService } from '../services/nbp.service';
 
 @Component({
   selector: 'app-playground',
@@ -100,7 +99,7 @@ export class PlaygroundComponent implements OnInit {
 
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
-  constructor(private rateService: NBPService) { }
+  constructor() { }
 
   ngOnInit() {
   }

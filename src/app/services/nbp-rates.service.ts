@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, zip, empty, of, from } from 'rxjs';
-import { map, filter, catchError, mergeMap, delay, concatMap } from 'rxjs/operators';
+import { Observable, of, from } from 'rxjs';
+import { map, catchError, delay, concatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../services/nbp-currencies.service';
 import { Period, NBPPeriodService } from './nbp-period.service';
@@ -14,7 +14,7 @@ export interface Rate {
 @Injectable({
   providedIn: 'root'
 })
-export class NBPService {
+export class NBPRatesService {
   apiURL = 'http://api.nbp.pl/api/';
 
   constructor(
@@ -69,4 +69,3 @@ export class NBPService {
     return getExchangeRates;
   }
 }
-

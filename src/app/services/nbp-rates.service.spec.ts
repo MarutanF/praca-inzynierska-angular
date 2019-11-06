@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { NBPService } from './nbp.service';
+import { NBPRatesService } from './nbp-rates.service';
 
-describe('NBPService', () => {
+describe('NBPRatesService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: NBPService = TestBed.get(NBPService);
+    const service: NBPRatesService = TestBed.get(NBPRatesService);
     expect(service).toBeTruthy();
   });
 });

@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Label, Color, BaseChartDirective } from 'ng2-charts';
-import { Observable } from 'rxjs';
-import { NBPService, Rate } from '../services/nbp.service';
+import { NBPRatesService, Rate } from '../services/nbp-rates.service';
 import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
 import { NBPPeriodService, Period } from '../services/nbp-period.service';
 
@@ -46,7 +45,7 @@ export class RatesComponent implements OnInit {
   public selectedPeriod: Period;
 
   constructor(
-    private rateService: NBPService,
+    private rateService: NBPRatesService,
     private currenciesService: NBPCurrenciesService,
     private periodService: NBPPeriodService) {
   }
