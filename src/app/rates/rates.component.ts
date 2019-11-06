@@ -4,7 +4,7 @@ import { Label, Color, BaseChartDirective } from 'ng2-charts';
 import { Observable } from 'rxjs';
 import { NBPService, Rate } from '../services/nbp.service';
 import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
-import { PeriodService, Period } from '../services/period.service';
+import { NBPPeriodService, Period } from '../services/nbp-period.service';
 
 @Component({
   selector: 'app-rates',
@@ -48,7 +48,7 @@ export class RatesComponent implements OnInit {
   constructor(
     private rateService: NBPService,
     private currenciesService: NBPCurrenciesService,
-    private periodService: PeriodService) {
+    private periodService: NBPPeriodService) {
   }
 
   ngOnInit() {

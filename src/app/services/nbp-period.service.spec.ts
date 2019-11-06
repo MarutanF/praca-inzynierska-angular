@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PeriodService } from './period.service';
+import { NBPPeriodService } from './nbp-period.service';
 
-describe('PeriodService', () => {
+describe('NBPPeriodService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: PeriodService = TestBed.get(PeriodService);
+    const service: NBPPeriodService = TestBed.get(NBPPeriodService);
     expect(service).toBeTruthy();
   });
 });

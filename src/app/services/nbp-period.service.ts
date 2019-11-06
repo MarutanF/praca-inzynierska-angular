@@ -8,7 +8,7 @@ export interface Period {
 @Injectable({
   providedIn: 'root'
 })
-export class PeriodService {
+export class NBPPeriodService {
   private periodList: Array<Period> = [];
   private lastAvailableDate = '2001-01-02';
 

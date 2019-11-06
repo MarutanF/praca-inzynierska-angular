@@ -3,7 +3,7 @@ import { Observable, zip, empty, of, from } from 'rxjs';
 import { map, filter, catchError, mergeMap, delay, concatMap } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { Currency } from '../services/nbp-currencies.service';
-import { Period, PeriodService } from './period.service';
+import { Period, NBPPeriodService } from './nbp-period.service';
 
 export interface Rate {
   rate: number;
@@ -19,7 +19,7 @@ export class NBPService {
 
   constructor(
     private http: HttpClient,
-    private periodService: PeriodService) { }
+    private periodService: NBPPeriodService) { }
 
   getCurrentRateHttp(currency: Currency): Observable<any> {
     const currentRate = this.http.get<any>(`${this.apiURL}/exchangerates/rates/${currency.table}/${currency.code}/`)
