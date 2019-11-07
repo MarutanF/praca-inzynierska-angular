@@ -65,6 +65,42 @@ export class NBPPeriodService {
     return stopDate.toISOString().slice(0, 10);
   }
 
+  getStopDateForecast(period: Period) {
+    const actualDate: Date = new Date();
+    let stopDate: Date = new Date();
+    switch (period.id) {
+      case 0:
+      case 1: {
+        stopDate.setDate(actualDate.getDate() + 1);
+        break;
+      }
+      case 2:
+      case 3: {
+        stopDate.setMonth(actualDate.getMonth() + 1);
+        break;
+      }
+      case 4:
+      case 5: {
+        stopDate.setFullYear(actualDate.getFullYear() + 1);
+        break;
+      }
+    }
+    return stopDate.toISOString().slice(0, 10);
+  }
+
+  getDatesBetween(start: string, stop: string): Array<string> {
+    const dateArray: Array<string> = [];
+    const dateMove = new Date(start);
+    dateMove.setDate(dateMove.getDate() + 1);
+    let strDate = start;
+    while (strDate < stop) {
+      strDate = dateMove.toISOString().slice(0, 10);
+      dateArray.push(strDate);
+      dateMove.setDate(dateMove.getDate() + 1);
+    }
+    return dateArray;
+  }
+
   getDatesArray(period: Period): Array<string> {
     const dateArray: Array<string> = [];
     const startDate = this.getStartDate(period);

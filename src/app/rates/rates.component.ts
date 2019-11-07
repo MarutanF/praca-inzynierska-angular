@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, Color, BaseChartDirective } from 'ng2-charts';
+import { Label, Color, BaseChartDirective, ChartsModule } from 'ng2-charts';
 import { NBPRatesService, Rate } from '../services/nbp-rates.service';
 import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
 import { NBPPeriodService, Period } from '../services/nbp-period.service';
@@ -20,11 +20,11 @@ export class RatesComponent implements OnInit {
   // RATES CHART
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
   public lineChartData: ChartDataSets[] = [
-    { data: [1, 2, 3], label: 'Kurs historyczny'},
-    { data: [1, 2, 3, 7], label: 'Kurs sredni', borderDash: [5, 5], pointStyle: 'line' },
-    { data: [8, 2, 3], label: 'Kurs przewidywany', borderDash: [5, 5], pointStyle: 'line' }
+    { data: [], label: 'Kurs historyczny' },
+    { data: [], label: 'Kurs sredni', borderDash: [5, 5], pointStyle: 'line' },
+    { data: [], label: 'Kurs przewidywany', borderDash: [5, 5], pointStyle: 'line' }
   ];
-  public lineChartLabels: Label[] = ['L1', 'L2', 'L3'];
+  public lineChartLabels: Label[] = [];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
     annotation: {},
@@ -39,11 +39,11 @@ export class RatesComponent implements OnInit {
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
     },
-    { 
+    {
       backgroundColor: 'rgba(255,255,255, 0)',
       borderColor: 'rgba(0,68,137,1)',
     },
-    { 
+    {
       backgroundColor: 'rgba(248,249,250,0.5)',
       borderColor: 'rgba(208,208,208,1)',
     },
@@ -129,8 +129,35 @@ export class RatesComponent implements OnInit {
           };
         });
         this.newestRate = collectionOfResponses.slice(-1)[0].rate;
+        this.updateChartForecast(collectionOfResponses);
+        this.updateChartAverage(collectionOfResponses);
         this.chart.update();
       }
     );
   }
+
+  updateChartAverage(collectionOfResponses: Array<Rate>) {
+    const averageValue = collectionOfResponses.map((value) => value.rate).reduce((a, b) => a + b, 0) / collectionOfResponses.length;
+    this.lineChartData[1].data = [
+      {x: String(this.lineChartLabels[0]), y: averageValue},
+      {x: String(this.lineChartLabels.slice(-1)[0]), y: averageValue}
+    ];
+    console.log(String(this.lineChartLabels[0]));
+
+  }
+
+  updateChartForecast(collectionOfResponses: Array<Rate>) {
+    let startData = String(this.lineChartLabels.slice(-1)[0]);
+    let stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
+    let arrayOfDates = this.periodService.getDatesBetween(startData, stopData);
+    arrayOfDates.forEach((value) => {
+      this.lineChartLabels.push(value);
+    })
+    this.lineChartData[2].data = [
+      {x: startData, y: collectionOfResponses.slice(-1)[0].rate},
+      {x: stopData, y: collectionOfResponses.slice(-1)[0].rate}
+    ];
+  }
+
+
 }
