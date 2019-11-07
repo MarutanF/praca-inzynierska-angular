@@ -20,23 +20,35 @@ export class RatesComponent implements OnInit {
   // RATES CHART
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
   public lineChartData: ChartDataSets[] = [
-    { data: [1, 2, 3], label: 'Rate' }
+    { data: [1, 2, 3], label: 'Kurs historyczny'},
+    { data: [1, 2, 3, 7], label: 'Kurs sredni', borderDash: [5, 5], pointStyle: 'line' },
+    { data: [8, 2, 3], label: 'Kurs przewidywany', borderDash: [5, 5], pointStyle: 'line' }
   ];
   public lineChartLabels: Label[] = ['L1', 'L2', 'L3'];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
+    responsive: true,
     annotation: {},
+    legend: { position: 'right' }
   };
   public lineChartColors: Color[] = [
     {
       backgroundColor: 'rgba(248,249,250,0.5)',
       borderColor: 'rgba(128,128,128,1)',
-      pointBackgroundColor: '#007bff',
+      pointBackgroundColor: 'rgba(128,128,128,1)',
       pointBorderColor: '#fff',
       pointHoverBackgroundColor: '#fff',
       pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
+    },
+    { 
+      backgroundColor: 'rgba(255,255,255, 0)',
+      borderColor: 'rgba(0,68,137,1)',
+    },
+    { 
+      backgroundColor: 'rgba(248,249,250,0.5)',
+      borderColor: 'rgba(208,208,208,1)',
+    },
   ];
-  public lineChartLegend = false;
+  public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [];
 
