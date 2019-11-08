@@ -104,6 +104,9 @@ export class RatesComponent implements OnInit {
 
   updateChartWithData() {
     let collectionOfResponses: Array<Rate> = [];
+    this.lineChartData[0].data = [];
+    this.lineChartData[1].data = [];
+    this.lineChartData[2].data = [];
     this.rateService.getRatesArrayHttp(this.selectedCurrency, this.selectedPeriod).subscribe(
       (value) => {
         collectionOfResponses.push(value);
