@@ -99,7 +99,10 @@ export class PlaygroundComponent implements OnInit {
 
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
-  constructor() { }
+  constructor() {
+    this.promiseMethod();
+    this.asyncMethod();
+  }
 
   ngOnInit() {
   }
@@ -147,6 +150,23 @@ export class PlaygroundComponent implements OnInit {
   public changeLabel() {
     this.lineChartLabels[2] = ['1st Line', '2nd Line'];
     this.chart.update();
+  }
+
+  waitForOneSecond(text) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        resolve('I promise to return after 5 second ! ' + text);
+      }, 5000);
+    });
+  }
+
+  promiseMethod() {
+    this.waitForOneSecond('promiseMethod').then((value) => console.log(value));
+  }
+
+  async asyncMethod() {
+    const value = await this.waitForOneSecond('asyncMethod');
+    console.log(value);
   }
 
 }
