@@ -20,6 +20,7 @@ import { AlertsComponent } from './alerts/alerts.component';
 import { PlaygroundComponent } from './playground/playground.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CacheInterceptor } from './cache/cache-interceptor';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { CacheInterceptor } from './cache/cache-interceptor';
     RatesComponent,
     CalculatorComponent,
     AlertsComponent,
-    PlaygroundComponent
+    PlaygroundComponent,
+    LoginComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
