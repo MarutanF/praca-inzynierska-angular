@@ -11,15 +11,12 @@ import { NBPCalculatorService } from '../services/nbp-calculator.service';
 export class CalculatorComponent implements OnInit {
 
   public listOfCurrencies: Currency[] = [];
+  public conversionRatio: number = 1;
+
   public amountHave: number = 1;
   public selectedCurrencyHave: Currency;
   public amountWant: number = 1;
   public selectedCurrencyWant: Currency;
-
-  public text1 = 'a';
-  public text2 = 'b';
-  public text3 = 'c';
-  public text4 = '';
 
   constructor(
     private rateService: NBPRatesService,
@@ -28,7 +25,7 @@ export class CalculatorComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.initializeCurrenciesDropdowns();
+    await this.initializeCurrenciesDropdowns();
     this.updateHave2Want();
   }
 
@@ -64,11 +61,9 @@ export class CalculatorComponent implements OnInit {
   updateHave2Want() {
     this.calculatorService.convertRate(this.selectedCurrencyHave, this.selectedCurrencyWant).subscribe(
       (value) => {
+        this.conversionRatio = value;
         this.amountHave = Number(this.amountHave);
         this.amountWant = Number((this.amountHave * value).toFixed(2));
-        this.text1 = `${this.amountHave} ${this.selectedCurrencyHave.code} = ${this.amountWant} ${this.selectedCurrencyWant.code}`;
-        this.text2 = `1 ${this.selectedCurrencyHave.code} = ${Number((value).toFixed(2))} ${this.selectedCurrencyWant.code}`;
-        this.text3 = `${(Number((1 / value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
       }
     );
   }
@@ -76,13 +71,10 @@ export class CalculatorComponent implements OnInit {
   updateWant2Have() {
     this.calculatorService.convertRate(this.selectedCurrencyWant, this.selectedCurrencyHave).subscribe(
       (value) => {
+        this.conversionRatio = value;
         this.amountHave = Number((this.amountWant * value).toFixed(2));
         this.amountWant = Number(this.amountWant);
-        this.text1 = `${this.amountHave} ${this.selectedCurrencyHave.code} = ${this.amountWant} ${this.selectedCurrencyWant.code}`;
-        this.text2 = `1 ${this.selectedCurrencyHave.code} = ${Number((value).toFixed(2))} ${this.selectedCurrencyWant.code}`;
-        this.text3 = `${(Number((1 / value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
       }
     );
   }
-
 }

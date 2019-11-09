@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Currency } from '../services/nbp-currencies.service';
-import { Observable, of, from, zip } from 'rxjs';
-import { NBPRatesService } from './nbp-rates.service';
+import { Observable, of, zip } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Currency } from '../services/nbp-currencies.service';
+import { NBPRatesService } from './nbp-rates.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,6 @@ export class NBPCalculatorService {
   constructor(private ratesService: NBPRatesService) { }
 
   convertRate(from: Currency, to: Currency): Observable<any> {
-    //console.log(to);
     if (from.code === 'PLN' && to.code === 'PLN') {
       return of(1);
     }

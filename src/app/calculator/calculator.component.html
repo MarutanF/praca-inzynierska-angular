@@ -70,7 +70,6 @@
 
 <br>
 
-<p> {{ text1 }} </p>
-<p> {{ text2 }} </p>
-<p> {{ text3 }} </p>
-<p> {{ text4 }} </p>
+<p> {{ amountHave }} {{ selectedCurrencyHave?.code}} = {{ amountWant }} {{ selectedCurrencyWant?.code }}</p>
+<p> 1 {{ selectedCurrencyHave?.code }} = {{ conversionRatio | number : '1.2-2' }} {{ selectedCurrencyWant?.code }}</p>
+<p> {{ (1 / this.conversionRatio) | number : '1.2-2'}} {{ selectedCurrencyHave?.code }} = 1 {{ selectedCurrencyWant?.code }}</p>

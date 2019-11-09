@@ -127,7 +127,7 @@ export class RatesComponent implements OnInit {
 
   async addValueToFirstDate() {
     if (this.lineChartLabels[0] !== (this.lineChartData[0].data as Array<Point>)[0].x) {
-      let lastAvailableRate = await this.rateService.getRateForDayOrLastAvailableDay(this.selectedCurrency, (this.lineChartLabels[0] as string));
+      const lastAvailableRate = await this.rateService.getRateForDayOrLastAvailableDay(this.selectedCurrency, (this.lineChartLabels[0] as string));
       (this.lineChartData[0].data as Array<Point>).unshift({ y: lastAvailableRate.rate, x: (this.lineChartLabels[0] as string) });
     }
   }
@@ -149,7 +149,7 @@ export class RatesComponent implements OnInit {
     const arrayOfFutureDays = this.periodService.getDatesBetween(startData, stopData);
     arrayOfFutureDays.forEach((value) => {
       this.lineChartLabels.push(value);
-      (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value});
+      (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value });
     });
   }
 }
