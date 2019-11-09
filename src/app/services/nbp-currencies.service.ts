@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, zip } from 'rxjs';
+import { Observable, zip, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 export interface Currency {
@@ -21,6 +21,28 @@ export class NBPCurrenciesService {
 
   constructor(private http: HttpClient) { }
 
+  getCurrenciesList(): Promise<Currency[]> {
+    return this.getCurrenciesListHttp().toPromise()
+      .then(
+        (value) => {
+          let listOfCurrencies: Currency[] = this.mergeHttpResponse(value);
+          listOfCurrencies = this.groupCurrenciesList(listOfCurrencies);
+          listOfCurrencies = this.sortCurrenciesList(listOfCurrencies);
+          console.log('Response - connection to NBP with currencies: ');
+          console.log(listOfCurrencies);
+          return listOfCurrencies;
+        })
+      .catch(
+        (error) => {
+          console.log('Error - connection to NBP with currencies: ' + error);
+          let listOfCurrencies: Currency[] = this.getMockCurrencies();
+          listOfCurrencies = this.groupCurrenciesList(listOfCurrencies);
+          listOfCurrencies = this.sortCurrenciesList(listOfCurrencies);
+          return listOfCurrencies;
+        }
+      );
+  }
+
   getCurrenciesListHttp(): Observable<any> {
     const tableAResponse = this.http.get<any>(this.apiURL + this.apiTableA)
       .pipe(
@@ -35,15 +57,7 @@ export class NBPCurrenciesService {
     return zip(tableAResponse, tableBResponse);
   }
 
-  // formatted for rates
-  getCurrenciesListFormatted(res: Array<any>): Array<Currency> {
-    const currenciesList: Array<Currency> = this.mapCurrenciesList(res);
-    const groupedCurrenciesList: Array<Currency> = this.groupCurrenciesList(currenciesList);
-    const groupedAndSortedCurrenciesList: Array<Currency> = this.sortCurrenciesList(groupedCurrenciesList);
-    return groupedAndSortedCurrenciesList;
-  }
-
-  mapCurrenciesList(data: Array<any>): Array<Currency> {
+  mergeHttpResponse(data: Array<any>): Array<Currency> {
     const mapedList = [];
     for (let i = 0; i < data[0].length; i++) {
       mapedList.push({ code: data[0][i].code, name: data[0][i].currency, table: 'a' });
@@ -79,6 +93,16 @@ export class NBPCurrenciesService {
       return a.groupCode < b.groupCode ? -1 : a.groupCode > b.groupCode ? 1 : 0;
     });
     return groupedAndSortedCurrenciesList;
+  }
+
+  addPLNCurrency(currenciesList: Array<Currency>): Array<Currency>{
+    const plnCurrency: Currency = {
+      code: 'PLN',
+      name: 'polski złoty',
+      groupCode: 'Favorite'
+    };
+    currenciesList.unshift(plnCurrency); //add at [0]
+    return currenciesList;
   }
 
   getMockCurrencies(): Array<Currency> {

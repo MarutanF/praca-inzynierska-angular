@@ -18,7 +18,9 @@ export class RatesComponent implements OnInit {
   public newestRate = 0.0;
 
   // RATES CHART
-  @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
+  @ViewChild(BaseChartDirective, { static: true })
+  chart: BaseChartDirective;
+  
   public lineChartData: ChartDataSets[] = [
     { data: [], label: 'Kurs historyczny' },
     { data: [], label: 'Kurs sredni', borderDash: [5, 5], pointStyle: 'line' },
@@ -62,47 +64,35 @@ export class RatesComponent implements OnInit {
     private periodService: NBPPeriodService) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.initializePeriodList();
+    await this.initializeCurrenciesDropdown();
+    this.updateChart();
+  }
 
-    // PERIOD LIST
-    this.periodList = this.periodService.getPeriods();
+  initializePeriodList() {
+    this.periodList = this.periodService.getPeriodsList();
     this.selectedPeriod = this.periodList[0];
+  }
 
-    // CURRENCIES DROPDOWN
-    this.listOfCurrencies = this.currenciesService.getMockCurrencies();
+  async initializeCurrenciesDropdown() {
+    this.listOfCurrencies = await this.currenciesService.getCurrenciesList();
     this.selectedCurrency = this.listOfCurrencies[0];
-    console.log(this.selectedCurrency);
-    this.currenciesService.getCurrenciesListHttp().subscribe(
-      (value) => {
-        console.log('Response - connection to NBP with currencies: ');
-        this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
-        console.log(this.listOfCurrencies);
-        this.selectedCurrency = this.listOfCurrencies[0];
-        console.log(this.selectedCurrency);
-      },
-      (error) => {
-        // mock currencies will be displayed
-        console.log('Error - connection to NBP with currencies: ' + error);
-      }
-    );
-
-    // RATES CHART
-    this.updateChartWithData();
   }
 
   onSelectedCurrencyChange($event) {
-    console.log({ name: '(currencyChange)', newValue: $event });
+    console.log({ name: '(currencyChange)', newValue: JSON.stringify($event) });
     this.selectedCurrency = $event;
-    this.updateChartWithData();
+    this.updateChart();
   }
 
   onSelectedPeriodChange(period) {
-    console.log({ name: '(periodChange)', newValue: period });
+    console.log({ name: '(periodChange)', newValue: JSON.stringify(period) });
     this.selectedPeriod = period;
-    this.updateChartWithData();
+    this.updateChart();
   }
 
-  updateChartWithData() {
+  updateChart() {
     let collectionOfResponses: Array<Rate> = [];
     this.lineChartData[0].data = [];
     this.lineChartData[1].data = [];
@@ -142,8 +132,8 @@ export class RatesComponent implements OnInit {
   updateChartAverage(collectionOfResponses: Array<Rate>) {
     const averageValue = collectionOfResponses.map((value) => value.rate).reduce((a, b) => a + b, 0) / collectionOfResponses.length;
     this.lineChartData[1].data = [
-      {x: String(this.lineChartLabels[0]), y: averageValue},
-      {x: String(this.lineChartLabels.slice(-1)[0]), y: averageValue}
+      { x: String(this.lineChartLabels[0]), y: averageValue },
+      { x: String(this.lineChartLabels.slice(-1)[0]), y: averageValue }
     ];
     console.log(String(this.lineChartLabels[0]));
 
@@ -157,10 +147,12 @@ export class RatesComponent implements OnInit {
       this.lineChartLabels.push(value);
     })
     this.lineChartData[2].data = [
-      {x: startData, y: collectionOfResponses.slice(-1)[0].rate},
-      {x: stopData, y: collectionOfResponses.slice(-1)[0].rate}
+      { x: startData, y: collectionOfResponses.slice(-1)[0].rate },
+      { x: stopData, y: collectionOfResponses.slice(-1)[0].rate }
     ];
   }
+
+
 
 
 }

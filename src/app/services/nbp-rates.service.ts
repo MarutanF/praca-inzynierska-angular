@@ -55,7 +55,7 @@ export class NBPRatesService {
 
   getMockRatesArray(currency: Currency, period: Period) {
     let getExchangeRates;
-    if (currency.code === 'USD') {
+    if (currency!== undefined && currency.code === 'USD') {
       getExchangeRates = {
         dates: ['2019-10-02', '2019-10-03', '2019-10-04'],
         values: [1, 2, 3]

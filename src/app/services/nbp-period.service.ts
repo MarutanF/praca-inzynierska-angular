@@ -24,7 +24,7 @@ export class NBPPeriodService {
       ];
   }
 
-  getPeriods(): Array<Period> {
+  getPeriodsList(): Array<Period> {
     return this.periodList;
   }
 

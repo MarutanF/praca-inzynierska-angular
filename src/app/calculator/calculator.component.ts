@@ -27,25 +27,16 @@ export class CalculatorComponent implements OnInit {
     private calculatorService: NBPCalculatorService
   ) { }
 
-  ngOnInit() {
-    // CURRENCIES DROPDOWN
-    this.listOfCurrencies = this.currenciesService.getMockCurrencies();
+  async ngOnInit() {
+    this.initializeCurrenciesDropdowns();
+    this.updateHave2Want();
+  }
+
+  async initializeCurrenciesDropdowns() {
+    this.listOfCurrencies = await this.currenciesService.getCurrenciesList();
+    this.listOfCurrencies = this.currenciesService.addPLNCurrency(this.listOfCurrencies);
     this.selectedCurrencyHave = this.listOfCurrencies[0];
     this.selectedCurrencyWant = this.listOfCurrencies[1];
-    this.currenciesService.getCurrenciesListHttp().subscribe(
-      (value) => {
-        console.log('Response - connection to NBP with currencies: ');
-        this.listOfCurrencies = this.currenciesService.getCurrenciesListFormatted(value);
-        this.listOfCurrencies = this.calculatorService.getCurrenciesListFormattedForCalculator(this.listOfCurrencies);
-        this.selectedCurrencyHave = this.listOfCurrencies[0];
-        this.selectedCurrencyWant = this.listOfCurrencies[1];
-        this.updateHave2Want();
-      },
-      (error) => {
-        // mock currencies will be displayed
-        console.log('Error - connection to NBP with currencies: ' + error);
-      }
-    );
   }
 
   onSelectedCurrencyChangeHave($event) {
