@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpRequest, HttpHandler, HttpInterceptor, HttpResponse } from '@angular/common/http';
+import { HttpEvent, HttpRequest, HttpHandler, HttpInterceptor, HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -8,6 +8,7 @@ export class CacheInterceptor implements HttpInterceptor {
     private cache = new Map<string, any>();
 
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
         if (request.method !== 'GET') {
             return next.handle(request);
         }
@@ -21,6 +22,10 @@ export class CacheInterceptor implements HttpInterceptor {
             tap(event => {
                 if (event instanceof HttpResponse) {
                     this.cache.set(request.url, event);
+                }
+            }, error => {
+                if (error instanceof HttpErrorResponse) {
+                    this.cache.set(request.url, error);
                 }
             })
         );
