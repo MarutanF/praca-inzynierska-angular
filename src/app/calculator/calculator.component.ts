@@ -40,47 +40,47 @@ export class CalculatorComponent implements OnInit {
   }
 
   onSelectedCurrencyChangeHave($event) {
-    console.log({ name: '(currencyChange)', newValue: $event });
+    console.log({ name: '(currencyChange)', newValue: JSON.stringify($event) });
     this.selectedCurrencyHave = $event;
     this.updateHave2Want();
   }
 
   onSelectedCurrencyChangeWant($event) {
-    console.log({ name: '(currencyChange)', newValue: $event });
+    console.log({ name: '(currencyChange)', newValue: JSON.stringify($event) });
     this.selectedCurrencyWant = $event;
     this.updateWant2Have();
   }
 
   onChangedAmountHave() {
-    console.log({ name: '(onChangedAmountHave)', newValue: this.amountHave });
+    console.log({ name: '(onChangedAmountHave)', newValue: JSON.stringify(this.amountHave) });
     this.updateHave2Want();
   }
 
   onChangedAmountWant() {
-    console.log({ name: '(onChangedAmountWant)', newValue: this.amountWant });
+    console.log({ name: '(onChangedAmountWant)', newValue: JSON.stringify(this.amountWant) });
     this.updateWant2Have();
   }
 
-  updateHave2Want(){
+  updateHave2Want() {
     this.calculatorService.convertRate(this.selectedCurrencyHave, this.selectedCurrencyWant).subscribe(
       (value) => {
         this.amountHave = Number(this.amountHave);
         this.amountWant = Number((this.amountHave * value).toFixed(2));
         this.text1 = `${this.amountHave} ${this.selectedCurrencyHave.code} = ${this.amountWant} ${this.selectedCurrencyWant.code}`;
         this.text2 = `1 ${this.selectedCurrencyHave.code} = ${Number((value).toFixed(2))} ${this.selectedCurrencyWant.code}`;
-        this.text3 = `${(Number((1/value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
+        this.text3 = `${(Number((1 / value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
       }
     );
   }
 
-  updateWant2Have(){
+  updateWant2Have() {
     this.calculatorService.convertRate(this.selectedCurrencyWant, this.selectedCurrencyHave).subscribe(
       (value) => {
         this.amountHave = Number((this.amountWant * value).toFixed(2));
         this.amountWant = Number(this.amountWant);
         this.text1 = `${this.amountHave} ${this.selectedCurrencyHave.code} = ${this.amountWant} ${this.selectedCurrencyWant.code}`;
         this.text2 = `1 ${this.selectedCurrencyHave.code} = ${Number((value).toFixed(2))} ${this.selectedCurrencyWant.code}`;
-        this.text3 = `${(Number((1/value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
+        this.text3 = `${(Number((1 / value).toFixed(2)))} ${this.selectedCurrencyHave.code} = 1 ${this.selectedCurrencyWant.code}`;
       }
     );
   }

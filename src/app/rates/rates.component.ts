@@ -1,13 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions } from 'chart.js';
-import { Label, Color, BaseChartDirective, ChartsModule } from 'ng2-charts';
-import { NBPRatesService, Rate } from '../services/nbp-rates.service';
-import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
+import { BaseChartDirective, Color, Label } from 'ng2-charts';
+import { Currency, NBPCurrenciesService } from '../services/nbp-currencies.service';
 import { NBPPeriodService, Period } from '../services/nbp-period.service';
+import { NBPRatesService, Rate } from '../services/nbp-rates.service';
 
 export interface Point {
-  y: number,
-  x: string
+  y: number;
+  x: string;
 }
 
 @Component({
@@ -63,7 +63,7 @@ export class RatesComponent implements OnInit {
   public periodList: Period[] = [];
   public selectedPeriod: Period;
 
-  // SHARED
+  // DATA
   private arrayOfResponses: Array<Rate> = [];
   private arrayOfDates: Array<string> = [];
 
@@ -120,6 +120,7 @@ export class RatesComponent implements OnInit {
         console.log(this.arrayOfResponses);
         this.addValueToFirstDate();
         this.updateChartAverage();
+        this.updateChartForecast();
       }
     );
   }
@@ -139,18 +140,16 @@ export class RatesComponent implements OnInit {
     ];
   }
 
-
-  // updateChartForecast(collectionOfResponses: Array<Rate>) {
-  //   let startData = String(this.lineChartLabels.slice(-1)[0]);
-  //   let stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
-  //   let arrayOfDates = this.periodService.getDatesBetween(startData, stopData);
-  //   arrayOfDates.forEach((value) => {
-  //     this.lineChartLabels.push(value);
-  //   })
-  //   this.lineChartData[2].data = [
-  //     { x: startData, y: collectionOfResponses.slice(-1)[0].rate },
-  //     { x: stopData, y: collectionOfResponses.slice(-1)[0].rate }
-  //   ];
-  // }
-
+  updateChartForecast() {
+    let startData = String(this.arrayOfResponses.slice(-1)[0].date);
+    startData = this.periodService.plusOneDay(startData);
+    const stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
+    const lastPointInHistory: Point = { x: String(this.arrayOfResponses.slice(-1)[0].date), y: this.arrayOfResponses.slice(-1)[0].rate };
+    (this.lineChartData[2].data as Array<Point>).push(lastPointInHistory);
+    const arrayOfFutureDays = this.periodService.getDatesBetween(startData, stopData);
+    arrayOfFutureDays.forEach((value) => {
+      this.lineChartLabels.push(value);
+      (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value});
+    });
+  }
 }

@@ -123,6 +123,12 @@ export class NBPPeriodService {
     return day1.toISOString().slice(0, 10);
   }
 
+  plusOneDay(day0: string): string {
+    let day1 = new Date(day0);
+    day1.setDate(day1.getDate() + 1);
+    return day1.toISOString().slice(0, 10);
+  }
+
 
 
 

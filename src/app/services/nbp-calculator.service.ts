@@ -11,18 +11,8 @@ export class NBPCalculatorService {
 
   constructor(private ratesService: NBPRatesService) { }
 
-  getCurrenciesListFormattedForCalculator(currenciesList: Array<Currency>): Array<Currency> {
-    const plnCurrency: Currency = {
-      code: 'PLN',
-      name: 'polski złoty',
-      groupCode: 'Favorite'
-    };
-    currenciesList.unshift(plnCurrency);
-    return currenciesList;
-  }
-
   convertRate(from: Currency, to: Currency): Observable<any> {
-    console.log(to);
+    //console.log(to);
     if (from.code === 'PLN' && to.code === 'PLN') {
       return of(1);
     }
