@@ -5,6 +5,11 @@ import { NBPRatesService, Rate } from '../services/nbp-rates.service';
 import { NBPCurrenciesService, Currency } from '../services/nbp-currencies.service';
 import { NBPPeriodService, Period } from '../services/nbp-period.service';
 
+export interface Point {
+  y: number,
+  x: string
+}
+
 @Component({
   selector: 'app-rates',
   templateUrl: './rates.component.html',
@@ -20,7 +25,7 @@ export class RatesComponent implements OnInit {
   // RATES CHART
   @ViewChild(BaseChartDirective, { static: true })
   chart: BaseChartDirective;
-  
+
   public lineChartData: ChartDataSets[] = [
     { data: [], label: 'Kurs historyczny' },
     { data: [], label: 'Kurs sredni', borderDash: [5, 5], pointStyle: 'line' },
@@ -58,6 +63,10 @@ export class RatesComponent implements OnInit {
   public periodList: Period[] = [];
   public selectedPeriod: Period;
 
+  // SHARED
+  private arrayOfResponses: Array<Rate> = [];
+  private arrayOfDates: Array<string> = [];
+
   constructor(
     private rateService: NBPRatesService,
     private currenciesService: NBPCurrenciesService,
@@ -67,7 +76,7 @@ export class RatesComponent implements OnInit {
   async ngOnInit() {
     this.initializePeriodList();
     await this.initializeCurrenciesDropdown();
-    this.updateChart();
+    this.updateCharts();
   }
 
   initializePeriodList() {
@@ -78,81 +87,70 @@ export class RatesComponent implements OnInit {
   async initializeCurrenciesDropdown() {
     this.listOfCurrencies = await this.currenciesService.getCurrenciesList();
     this.selectedCurrency = this.listOfCurrencies[0];
+    this.newestRate = await this.rateService.getCurrentRatePromise(this.selectedCurrency);
   }
 
   onSelectedCurrencyChange($event) {
     console.log({ name: '(currencyChange)', newValue: JSON.stringify($event) });
     this.selectedCurrency = $event;
-    this.updateChart();
+    this.updateCharts();
   }
 
   onSelectedPeriodChange(period) {
     console.log({ name: '(periodChange)', newValue: JSON.stringify(period) });
     this.selectedPeriod = period;
-    this.updateChart();
+    this.updateCharts();
   }
 
-  updateChart() {
-    let collectionOfResponses: Array<Rate> = [];
+  updateCharts() {
+    this.arrayOfResponses = [];
     this.lineChartData[0].data = [];
     this.lineChartData[1].data = [];
     this.lineChartData[2].data = [];
-    this.rateService.getRatesArrayHttp(this.selectedCurrency, this.selectedPeriod).subscribe(
+    this.arrayOfDates = this.periodService.getDatesArray(this.selectedPeriod);
+    this.lineChartLabels = this.arrayOfDates;
+    this.rateService.getRatesArrayHttp(this.selectedCurrency, this.arrayOfDates).subscribe(
       (value) => {
-        collectionOfResponses.push(value);
+        this.arrayOfResponses.push(value);
+        (this.lineChartData[0].data as Array<Point>).push({ y: value.rate, x: value.date });
       },
-      (error) => {
-        // mock rates will be displayed
-        console.log('Error - connection to NBP with rates: ' + error);
-        const mockRatesArray = this.rateService.getMockRatesArray(this.selectedCurrency, this.selectedPeriod);
-        this.lineChartData[0].data = mockRatesArray.values;
-        this.lineChartLabels = mockRatesArray.dates;
-        this.newestRate = mockRatesArray.values[0];
-        this.chart.update();
-      },
+      (error) => { },
       () => {
         console.log('Response - connection to NBP with rates: ');
-        console.log(collectionOfResponses);
-        collectionOfResponses.sort((a, b) => (a.date).localeCompare(b.date));
-        this.lineChartLabels = collectionOfResponses.map((value) => value.date);
-        collectionOfResponses = collectionOfResponses.filter(value => value.valid === true);
-        this.lineChartData[0].data = collectionOfResponses.map((value) => {
-          return {
-            y: value.rate, x: value.date
-          };
-        });
-        this.newestRate = collectionOfResponses.slice(-1)[0].rate;
-        this.updateChartForecast(collectionOfResponses);
-        this.updateChartAverage(collectionOfResponses);
-        this.chart.update();
+        console.log(this.arrayOfResponses);
+        this.addValueToFirstDate();
+        this.updateChartAverage();
       }
     );
   }
 
-  updateChartAverage(collectionOfResponses: Array<Rate>) {
-    const averageValue = collectionOfResponses.map((value) => value.rate).reduce((a, b) => a + b, 0) / collectionOfResponses.length;
+  async addValueToFirstDate() {
+    if (this.lineChartLabels[0] !== (this.lineChartData[0].data as Array<Point>)[0].x) {
+      let lastAvailableRate = await this.rateService.getRateForDayOrLastAvailableDay(this.selectedCurrency, (this.lineChartLabels[0] as string));
+      (this.lineChartData[0].data as Array<Point>).unshift({ y: lastAvailableRate.rate, x: (this.lineChartLabels[0] as string) });
+    }
+  }
+
+  updateChartAverage() {
+    const averageValue = this.arrayOfResponses.map((value) => value.rate).reduce((a, b) => a + b, 0) / this.arrayOfResponses.length;
     this.lineChartData[1].data = [
       { x: String(this.lineChartLabels[0]), y: averageValue },
-      { x: String(this.lineChartLabels.slice(-1)[0]), y: averageValue }
-    ];
-    console.log(String(this.lineChartLabels[0]));
-
-  }
-
-  updateChartForecast(collectionOfResponses: Array<Rate>) {
-    let startData = String(this.lineChartLabels.slice(-1)[0]);
-    let stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
-    let arrayOfDates = this.periodService.getDatesBetween(startData, stopData);
-    arrayOfDates.forEach((value) => {
-      this.lineChartLabels.push(value);
-    })
-    this.lineChartData[2].data = [
-      { x: startData, y: collectionOfResponses.slice(-1)[0].rate },
-      { x: stopData, y: collectionOfResponses.slice(-1)[0].rate }
+      { x: String(this.arrayOfResponses.slice(-1)[0].date), y: averageValue }
     ];
   }
 
 
-
+  // updateChartForecast(collectionOfResponses: Array<Rate>) {
+  //   let startData = String(this.lineChartLabels.slice(-1)[0]);
+  //   let stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
+  //   let arrayOfDates = this.periodService.getDatesBetween(startData, stopData);
+  //   arrayOfDates.forEach((value) => {
+  //     this.lineChartLabels.push(value);
+  //   })
+  //   this.lineChartData[2].data = [
+  //     { x: startData, y: collectionOfResponses.slice(-1)[0].rate },
+  //     { x: stopData, y: collectionOfResponses.slice(-1)[0].rate }
+  //   ];
+  // }
 
 }

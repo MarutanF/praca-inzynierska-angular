@@ -10,7 +10,7 @@ export interface Period {
 })
 export class NBPPeriodService {
   private periodList: Array<Period> = [];
-  private lastAvailableDate = '2001-01-02';
+  public lastAvailableDate = '2001-01-02';
 
   constructor() {
     this.periodList =
@@ -116,4 +116,17 @@ export class NBPPeriodService {
 
     return dateArray;
   }
+
+  minusOneDay(day0: string): string {
+    let day1 = new Date(day0);
+    day1.setDate(day1.getDate() - 1);
+    return day1.toISOString().slice(0, 10);
+  }
+
+
+
+
+
+
+
 }
