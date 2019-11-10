@@ -21,6 +21,8 @@ import { PlaygroundComponent } from './playground/playground.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CacheInterceptor } from './cache/cache-interceptor';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
+import { UserComponent } from './user/user.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +33,9 @@ import { LoginComponent } from './login/login.component';
     CalculatorComponent,
     AlertsComponent,
     PlaygroundComponent,
-    LoginComponent
+    LoginComponent,
+    RegisterComponent,
+    UserComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),

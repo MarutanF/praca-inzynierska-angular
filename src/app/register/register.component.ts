@@ -4,11 +4,11 @@ import { AuthService } from '../auth/auth.service';
 import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
 
   @ViewChild('f', { static: false }) loginForm: NgForm;
   public errorMessage: string;
@@ -24,8 +24,9 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     const emailInput = this.loginForm.value.userData.email;
     const passwordInput = this.loginForm.value.userData.password;
-    this.authService.login(emailInput, passwordInput)
+    this.authService.register(emailInput, passwordInput)
       .then(res => {
+        this.authService.login(emailInput, passwordInput);
         this.router.navigate(['/user']);
       }, err => {
         this.errorMessage = err.message;

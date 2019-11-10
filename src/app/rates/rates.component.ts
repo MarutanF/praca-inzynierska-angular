@@ -93,6 +93,7 @@ export class RatesComponent implements OnInit {
   onSelectedCurrencyChange($event) {
     console.log({ name: '(currencyChange)', newValue: JSON.stringify($event) });
     this.selectedCurrency = $event;
+    this.rateService.getCurrentRatePromise(this.selectedCurrency).then((val) => this.newestRate = val);
     this.updateCharts();
   }
 

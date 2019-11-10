@@ -39,7 +39,15 @@ export class AuthService {
     return await this.angularFireAuth.auth.signOut();
   }
 
-  isUserLoggedIn() {
+  isUserLogged(): boolean {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      return true;
+    }
+    return false;
+  }
+
+  getUser() {
     return JSON.parse(localStorage.getItem('user'));
   }
 
