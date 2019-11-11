@@ -35,7 +35,15 @@ export class RatesComponent implements OnInit {
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
     annotation: {},
-    legend: { position: 'right' }
+    legend: { position: 'right' },
+    tooltips: {
+      mode: 'x',
+      intersect: false,
+    },
+    hover: {
+      mode: 'x',
+      intersect: false
+    },
   };
   public lineChartColors: Color[] = [
     {
