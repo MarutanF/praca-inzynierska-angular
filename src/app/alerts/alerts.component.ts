@@ -13,17 +13,19 @@ export class AlertsComponent implements OnInit {
 
   constructor(private optimalAlertService: FirebaseOptimalAlertsService) {
     this.alert$ = this.optimalAlertService.getUserAlerts();
-   }
+  }
 
   ngOnInit() {
   }
 
-  myFun(data){
+  myFun(data) {
     console.log('Alert click');
+    console.log(data);
   }
 
-  myFun2(){
+  myFun2() {
     console.log('Button click');
+    this.optimalAlertService.addTestAlertToCurrentUser();
   }
 
 }
