@@ -1,1 +1,9 @@
 <p>Alerty</p>
+
+<ul>
+    <li *ngFor="let al of alert$ | async">
+        <p (click)="myFun(al)">{{ al | json }} </p>
+    </li>
+</ul>
+
+<button (click)="myFun2()"> Button </button>
