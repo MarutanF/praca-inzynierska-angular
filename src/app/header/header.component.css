@@ -10,6 +10,9 @@
 
 #imageUser{
     padding: 0.2rem 0rem 0.2rem 1rem;
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
 }
 
 #headerMenu {

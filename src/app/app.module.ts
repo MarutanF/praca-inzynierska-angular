@@ -23,6 +23,9 @@ import { CacheInterceptor } from './cache/cache-interceptor';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
+import { RegulationComponent } from './regulation/regulation.component';
+import { AboutUsComponent } from './about-us/about-us.component';
+import { HelpComponent } from './help/help.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +38,10 @@ import { UserComponent } from './user/user.component';
     PlaygroundComponent,
     LoginComponent,
     RegisterComponent,
-    UserComponent
+    UserComponent,
+    RegulationComponent,
+    AboutUsComponent,
+    HelpComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
