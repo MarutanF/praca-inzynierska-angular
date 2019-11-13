@@ -4,8 +4,12 @@
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
-img {
+#imageLogo{
     padding: 0rem 0rem 0rem 1rem;
+}
+
+#imageUser{
+    padding: 0.2rem 0rem 0.2rem 1rem;
 }
 
 #headerMenu {
@@ -14,16 +18,21 @@ img {
     border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
+* {
+    font-size: 1.25rem;
+}
+
 @media (min-width: 576px) {
     .navbar-expand-sm .navbar-nav .nav-link {
         padding-left: 0rem;
-        padding-right: 1rem;
+        padding-right: 2rem;
     }
 }
 
-@media (min-width: 768px) {
-    .navbar-expand-md .navbar-nav .nav-link {
-        padding-right: 1rem;
-        padding-left: 0rem;
-    }
+#navbarDropdown2{
+    padding-right: 1rem;
+}
+
+.ml-auto, .mx-auto {
+    margin-left: 0 !important;
 }

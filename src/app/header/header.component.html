@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-sm navbar-light bg-light" id="headerLogo">
-    <img src="//placehold.it/200x100?text=Logo" class="img-responsive">
+    <img src="//placehold.it/200x100?text=Logo" class="img-responsive" id="imageLogo">
 </nav>
 <nav class="navbar navbar-expand-sm navbar-light bg-light" id="headerMenu">
     <ul class="navbar-nav mr-auto">
@@ -12,14 +12,14 @@
         <li class="nav-item" routerLinkActive="active">
             <a class="nav-link" routerLink="/alerts">Alerty</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
+        <!-- <li class="nav-item" routerLinkActive="active">
             <a class="nav-link" routerLink="/playground">Playground</a>
-        </li>
+        </li> -->
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
             <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button">
-                <img src="//placehold.it/15x15?text=U" class="img-responsive">
+                <img src="//placehold.it/30x30?text=U" class="img-responsive" id="imageUser">
             </a>
             <div ngbDropdownMenu aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
                 <div *ngIf="!authService.isUserLogged()">
