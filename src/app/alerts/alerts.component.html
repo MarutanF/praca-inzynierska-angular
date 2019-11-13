@@ -1,5 +1,53 @@
-<p>Alerty</p>
+<h3>Alerty walutowe</h3>
 
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Waluta</th>
+            <th scope="col">Termin</th>
+            <th scope="col">Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let alert of alert$ | async; index as i">
+            <th scope="row">{{ i + 1 }}</th>
+            <td>{{ alert.currencyCode }}</td>
+            <td>{{ alert.expireDate | date:'yyyy-MM-dd' }}</td>
+            <td><button type="button" class="btn btn-outline-danger" (click)="deleteAlert(alert)">Usuń</button></td>
+        </tr>
+        <tr>
+            <th scope="row"></th>
+            <td>
+                <ng-select [items]="listOfCurrencies" [(ngModel)]="selectedCurrency" [clearable]="false"
+                           bindLabel="name" groupBy="groupCode">
+                    <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            No data found for "{{searchTerm}}"
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="selectedData"
+                               ngbDatepicker #d="ngbDatepicker"
+                               [minDate]="{year: 2010, month: 1, day: 1}">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                                    type="button"></button>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td><button type="button" class="btn btn-outline-success">Dodaj</button></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p> TEST </p>
 <ul>
     <li *ngFor="let al of alert$ | async">
         <p (click)="myFun(al)">{{ al | json }} </p>
@@ -7,3 +55,6 @@
 </ul>
 
 <button (click)="myFun2()"> Button </button>
+
+{{ selectedCurrency | json}}
+{{ model | json}}
