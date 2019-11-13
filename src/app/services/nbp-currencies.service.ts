@@ -73,7 +73,7 @@ export class NBPCurrenciesService {
     const groupedCurrenciesList = currenciesList.map(item => {
       // if currency code is in list of favorite currencies
       if (this.listOfFavoriteCurrencies.some(el => item.code === el)) {
-        item.groupCode = 'Favorite';
+        item.groupCode = 'Ulubione';
       } else {
         item.groupCode = item.name.charAt(0).toUpperCase();
       }
@@ -84,10 +84,10 @@ export class NBPCurrenciesService {
 
   sortCurrenciesList(groupedCurrenciesList: Array<Currency>): Array<Currency> {
     const groupedAndSortedCurrenciesList = groupedCurrenciesList.sort((a, b) => {
-      if (a.groupCode === 'Favorite' && b.groupCode !== 'Favorite') {
+      if (a.groupCode === 'Ulubione' && b.groupCode !== 'Ulubione') {
         return -1;
       }
-      if (a.groupCode !== 'Favorite' && b.groupCode === 'Favorite') {
+      if (a.groupCode !== 'Ulubione' && b.groupCode === 'Ulubione') {
         return 1;
       }
       return a.groupCode < b.groupCode ? -1 : a.groupCode > b.groupCode ? 1 : 0;
@@ -99,7 +99,7 @@ export class NBPCurrenciesService {
     const plnCurrency: Currency = {
       code: 'PLN',
       name: 'polski złoty',
-      groupCode: 'Favorite'
+      groupCode: 'Ulubione'
     };
     currenciesList.unshift(plnCurrency); //add at [0]
     return currenciesList;
