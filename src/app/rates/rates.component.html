@@ -2,18 +2,9 @@
 
 <span id="currenciesDropdown">
     <p>1</p>
-    <ng-select
-        [items]="listOfCurrencies"
-        [(ngModel)]="selectedCurrency"
-        [clearable]="false"
-        bindLabel="name"
-        groupBy="groupCode"
-        (change)="onSelectedCurrencyChange($event)"
-    >
-        <ng-template
-            ng-notfound-tmp
-            let-searchTerm="searchTerm"
-        >
+    <ng-select [items]="listOfCurrencies" [(ngModel)]="selectedCurrency" [clearable]="false" bindLabel="name"
+               groupBy="groupCode" (change)="onSelectedCurrencyChange($event)">
+        <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
             <div class="ng-option disabled">
                 No data found for "{{searchTerm}}"
             </div>
@@ -23,32 +14,33 @@
     <p> {{ newestRate | number : '1.2-2' }}</p>
     <p>PLN</p>
 </span>
-<!-- <p> Selected object: {{selectedCurrency | json}} </p> -->
-
-<div id="ratesChart">
-    <canvas
-        baseChart
-        [datasets]="lineChartData"
-        [labels]="lineChartLabels"
-        [options]="lineChartOptions"
-        [colors]="lineChartColors"
-        [legend]="lineChartLegend"
-        [chartType]="lineChartType"
-    ></canvas>
-</div>
 
 <br>
 
-<span id="periodList">
-    <p style="padding-right: 1rem;">Okres: </p>
-    <ul class="list-group">
-        <li
-            class="list-group-item"
-            *ngFor="let period of periodList"
-            [class.active]="period === selectedPeriod"
-            (click)="onSelectedPeriodChange(period)"
-        >
-            {{ period.label }}
-        </li>
-    </ul>
-</span>
+<div class="flex">
+
+    <div class="flex-item">
+        <div style="display: block; height: 50vh" id="ratesChart">
+            <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels" [options]="lineChartOptions"
+                    [colors]="lineChartColors" [legend]="lineChartLegend" [chartType]="lineChartType"
+                    [plugins]="lineChartPlugins"></canvas>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="flex-item">
+        <div style="display: block;">
+            <span id="periodList">
+                <p style="padding-right: 1rem;">Okres: </p>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let period of periodList"
+                        [class.active]="period === selectedPeriod" (click)="onSelectedPeriodChange(period)">
+                        {{ period.label }}
+                    </li>
+                </ul>
+            </span>
+        </div>
+    </div>
+    
+</div>

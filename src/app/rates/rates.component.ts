@@ -33,6 +33,7 @@ export class RatesComponent implements OnInit {
   ];
   public lineChartLabels: Label[] = [];
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
+    maintainAspectRatio: false,
     responsive: true,
     annotation: {},
     legend: { position: 'right' },

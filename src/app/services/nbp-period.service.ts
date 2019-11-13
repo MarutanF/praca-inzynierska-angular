@@ -93,7 +93,7 @@ export class NBPPeriodService {
     const dateMove = new Date(start);
     dateMove.setDate(dateMove.getDate() + 1);
     let strDate = start;
-    while (strDate < stop) {
+    while (strDate <= stop) {
       strDate = dateMove.toISOString().slice(0, 10);
       dateArray.push(strDate);
       dateMove.setDate(dateMove.getDate() + 1);

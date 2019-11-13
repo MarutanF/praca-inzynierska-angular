@@ -33,9 +33,6 @@
 }
 
 #ratesChart {
-    display: block;
-    width: 800px;
-    height: 400px;
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
