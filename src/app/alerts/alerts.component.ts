@@ -19,11 +19,14 @@ export class AlertsComponent implements OnInit {
 
   // DATAPICKER
   public selectedData;
+  public defaultDate;
 
   constructor(
     private optimalAlertService: FirebaseOptimalAlertsService,
     private currenciesService: NBPCurrenciesService) {
     this.alert$ = this.optimalAlertService.getUserAlerts();
+    this.defaultDate = this.getDefaultDate();
+    this.selectedData = this.defaultDate;
   }
 
   async ngOnInit() {
@@ -39,13 +42,29 @@ export class AlertsComponent implements OnInit {
     this.optimalAlertService.deleteAlert(alert);
   }
 
-  myFun(data) {
-    console.log('Alert click');
-    console.log(data);
+  addAlert() {
+    let currencyCode = this.selectedCurrency.code;
+    let expireDate = new Date(this.selectedData.year, this.selectedData.month, this.selectedData.day);
+    this.optimalAlertService.addAlert({ currencyCode: currencyCode, expireDate: expireDate });
+    this.resetForm();
   }
 
-  myFun2() {
-    console.log('Button click');
+  getMinDate() {
+    let today = new Date();
+    let todayObj = { year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate() };
+    return todayObj;
+  }
+
+  getDefaultDate() {
+    let today = new Date();
+    today.setDate(today.getDate() + 7);
+    let todayObj = { year: today.getFullYear(), month: today.getMonth() + 1, day: today.getDate() };
+    return todayObj;
+  }
+
+  resetForm() {
+    this.selectedCurrency = this.listOfCurrencies[0];
+    this.selectedData = this.defaultDate;
   }
 
 }
