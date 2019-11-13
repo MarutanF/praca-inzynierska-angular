@@ -2,36 +2,35 @@
     <img src="//placehold.it/200x100?text=Logo" class="img-responsive">
 </nav>
 <nav class="navbar navbar-expand-sm navbar-light bg-light" id="headerMenu">
-    <div class="navbar-expand-sm" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/rates">Kursy</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/calculator">Kalkulator</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/alerts">Alerty</a>
-            </li>
-            <li class="nav-item" routerLinkActive="active">
-                <a class="nav-link" routerLink="/playground">Playground</a>
-            </li>
-            <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
-                <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button">
-                  <img src="//placehold.it/15x15?text=U" class="img-responsive">
-                </a>
-                <div ngbDropdownMenu aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
-                    <div *ngIf="!authService.isUserLogged()">
-                        <a ngbDropdownItem routerLink="/login">Logowanie</a>
-                        <a ngbDropdownItem routerLink="/register">Rejestracja</a>
-                    </div>
-                    <div *ngIf="authService.isUserLogged()">
-                        <a ngbDropdownItem routerLink="/user">Konto</a>
-                        <a ngbDropdownItem routerLink="/" (click)="authService.logout()">Wyloguj</a>
-                    </div>
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/rates">Kursy</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/calculator">Kalkulator</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/alerts">Alerty</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/playground">Playground</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
+            <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button">
+                <img src="//placehold.it/15x15?text=U" class="img-responsive">
+            </a>
+            <div ngbDropdownMenu aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
+                <div *ngIf="!authService.isUserLogged()">
+                    <a ngbDropdownItem routerLink="/login">Logowanie</a>
+                    <a ngbDropdownItem routerLink="/register">Rejestracja</a>
                 </div>
-            </li>
-        </ul>
-    </div>
+                <div *ngIf="authService.isUserLogged()">
+                    <a ngbDropdownItem routerLink="/user">Konto</a>
+                    <a ngbDropdownItem routerLink="/" (click)="authService.logout()">Wyloguj</a>
+                </div>
+            </div>
+        </li>
+    </ul>
 </nav>
-

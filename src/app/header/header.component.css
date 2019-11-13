@@ -20,3 +20,10 @@ img {
         padding-right: 1rem;
     }
 }
+
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-nav .nav-link {
+        padding-right: 1rem;
+        padding-left: 0rem;
+    }
+}
