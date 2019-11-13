@@ -57,14 +57,19 @@ export class FirebaseOptimalAlertsService {
       .collection<OptimalAlert>('optimalAlerts').doc(docId).delete();
   }
 
-  addTestAlertToCurrentUser() {
-    // const testAlert1: OptimalAlert = { currencyCode: 'PLN' };
-    // this.addAlert(testAlert1);
-    // const testAlert2: OptimalAlert = { currencyCode: 'EUR' };
-    // this.addAlert(testAlert2);
+  updateAlert(alert: OptimalAlert) {
+    const docId = alert.documentId;
+    this.db
+      .collection<OptimalAlert>('optimalAlerts').doc(docId).update(alert);
+  }
 
-    const testAlert2: OptimalAlert = { currencyCode: 'EUR', expireDate: new Date('2020-01-10') };
+  addTestAlertToCurrentUser() {
+    const testAlert1: OptimalAlert = { currencyCode: 'PLN' };
+    this.addAlert(testAlert1);
+    const testAlert2: OptimalAlert = { currencyCode: 'EUR' };
     this.addAlert(testAlert2);
+    const testAlert3: OptimalAlert = { currencyCode: 'EUR', expireDate: new Date('2020-01-10') };
+    this.addAlert(testAlert3);
   }
 
 }

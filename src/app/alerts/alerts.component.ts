@@ -25,7 +25,6 @@ export class AlertsComponent implements OnInit {
 
   myFun2() {
     console.log('Button click');
-    this.optimalAlertService.addTestAlertToCurrentUser();
   }
 
 }
