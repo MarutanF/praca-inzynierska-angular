@@ -41,15 +41,15 @@ export class RatesComponent implements OnInit {
       mode: 'x',
       intersect: false,
       callbacks: {
-        title: function (tooltipItem, data){
+        title: function (tooltipItem, data) {
           let day = ((data.datasets[tooltipItem[0].datasetIndex].data[tooltipItem[0].index] as Point).x);
           return day;
         },
         label: function (tooltipItem, data) {
-          // let day = ((data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as Point).x);
+          let day = ((data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as Point).x);
           let value = Number(tooltipItem.value).toFixed(4);
-          let datasetName = data.datasets[tooltipItem.datasetIndex].label;
-          return value + ' (' + datasetName + ')';
+          let datasetName = (data.datasets[tooltipItem.datasetIndex].label).substring(5);
+          return ' Kurs ' + value + ' (' + datasetName + ')' + ' dnia: ' + day;
         }
       }
     },
@@ -166,15 +166,29 @@ export class RatesComponent implements OnInit {
   }
 
   updateChartForecast() {
-    let startData = String(this.arrayOfResponses.slice(-1)[0].date);
-    startData = this.periodService.plusOneDay(startData);
-    const stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
+    // add last point in history to chart
     const lastPointInHistory: Point = { x: String(this.arrayOfResponses.slice(-1)[0].date), y: this.arrayOfResponses.slice(-1)[0].rate };
     (this.lineChartData[2].data as Array<Point>).push(lastPointInHistory);
+
+    // startData = lastPoint + 1
+    const startData = this.periodService.plusOneDay(lastPointInHistory.x);
+    const stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
     const arrayOfFutureDays = this.periodService.getDatesBetween(startData, stopData);
+
+    console.log('start: ' + startData);
+    console.log('stop: ' + stopData);
+    console.log(arrayOfFutureDays);
+
     arrayOfFutureDays.forEach((value) => {
-      this.lineChartLabels.push(value);
-      (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value });
+      if (this.lineChartLabels.includes(value)) {
+        // data zostala dodana do label wczesniej, wiec nie dodaje ponownie
+        // data zostala dodana wczesniej bo ten dzien juz minal, wiec predykcja to ostatnia wartosc
+        (this.lineChartData[2].data as Array<Point>).push({ y: lastPointInHistory.y, x: value });
+      } else {
+        this.lineChartLabels.push(value);
+        (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value });
+      }
     });
+
   }
 }

@@ -88,14 +88,14 @@ export class NBPPeriodService {
     return stopDate.toISOString().slice(0, 10);
   }
 
+  // <start, stop>
   getDatesBetween(start: string, stop: string): Array<string> {
     const dateArray: Array<string> = [];
-    const dateMove = new Date(start);
-    dateMove.setDate(dateMove.getDate() + 1);
-    let strDate = start;
-    while (strDate <= stop) {
-      strDate = dateMove.toISOString().slice(0, 10);
-      dateArray.push(strDate);
+    const dateStart = new Date(start);
+    const dateStop = new Date(stop);
+    let dateMove = dateStart;
+    while (dateMove <= dateStop) {
+      dateArray.push(dateMove.toISOString().slice(0, 10));
       dateMove.setDate(dateMove.getDate() + 1);
     }
     return dateArray;
