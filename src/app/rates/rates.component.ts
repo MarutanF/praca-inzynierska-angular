@@ -40,6 +40,18 @@ export class RatesComponent implements OnInit {
     tooltips: {
       mode: 'x',
       intersect: false,
+      callbacks: {
+        title: function (tooltipItem, data){
+          let day = ((data.datasets[tooltipItem[0].datasetIndex].data[tooltipItem[0].index] as Point).x);
+          return day;
+        },
+        label: function (tooltipItem, data) {
+          // let day = ((data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index] as Point).x);
+          let value = Number(tooltipItem.value).toFixed(4);
+          let datasetName = data.datasets[tooltipItem.datasetIndex].label;
+          return value + ' (' + datasetName + ')';
+        }
+      }
     },
     hover: {
       mode: 'x',
@@ -128,6 +140,9 @@ export class RatesComponent implements OnInit {
       () => {
         console.log('Response - connection to NBP with rates: ');
         console.log(this.arrayOfResponses);
+        console.log(this.lineChartData[0].data);
+        console.log(this.lineChartLabels);
+
         this.addValueToFirstDate();
         this.updateChartAverage();
         this.updateChartForecast();
