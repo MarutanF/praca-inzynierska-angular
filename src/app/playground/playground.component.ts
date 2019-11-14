@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChartType, ChartDataSets, ChartOptions } from 'chart.js';
 import { MultiDataSet, Label, Color, BaseChartDirective } from 'ng2-charts';
+import { PredictService } from '../services/predict.service';
 
 @Component({
   selector: 'app-playground',
@@ -99,13 +100,17 @@ export class PlaygroundComponent implements OnInit {
 
   @ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
-  constructor() {
-    this.promiseMethod();
-    this.asyncMethod();
+  constructor(private predictService: PredictService) {
+    // this.promiseMethod();
+    // this.asyncMethod();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.predictService.train();
+    this.predictService.predict(5);
+    console.log(this.predictService.prediction);
   }
+
   public randomize(): void {
     for (let i = 0; i < this.lineChartData.length; i++) {
       for (let j = 0; j < this.lineChartData[i].data.length; j++) {
