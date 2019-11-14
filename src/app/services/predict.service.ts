@@ -12,7 +12,7 @@ export class PredictService {
   public prediction: any;
 
   constructor() {
-    // this.train();
+
   }
 
   async train(): Promise<any> {
@@ -25,8 +25,8 @@ export class PredictService {
 
 
     // Training data, completely random stuff
-    const xs = tf.tensor1d([2, 8]);
-    const ys = tf.tensor1d([1, 4]);
+    const xs = tf.tensor1d([2.0, 4.0, 8.0]);
+    const ys = tf.tensor1d([1.0, 2.0, 4.0]);
 
 
     // Train
@@ -35,8 +35,10 @@ export class PredictService {
     console.log('model trained!');
   }
 
-  predict(val: number) {
-    const output = this.linearModel.predict(tf.tensor2d([val], [1, 1])) as any;
+  predict(valX: number) {
+    const output = this.linearModel.predict(tf.tensor2d([valX], [1, 1])) as any;
     this.prediction = Array.from(output.dataSync())[0];
+    const valY = this.prediction;
+    return valY;
   }
 }

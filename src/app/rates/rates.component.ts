@@ -140,8 +140,8 @@ export class RatesComponent implements OnInit {
       () => {
         console.log('Response - connection to NBP with rates: ');
         console.log(this.arrayOfResponses);
-        console.log(this.lineChartData[0].data);
-        console.log(this.lineChartLabels);
+        // console.log(this.lineChartData[0].data);
+        // console.log(this.lineChartLabels);
 
         this.addValueToFirstDate();
         this.updateChartAverage();
@@ -175,9 +175,9 @@ export class RatesComponent implements OnInit {
     const stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
     const arrayOfFutureDays = this.periodService.getDatesBetween(startData, stopData);
 
-    console.log('start: ' + startData);
-    console.log('stop: ' + stopData);
-    console.log(arrayOfFutureDays);
+    // console.log('start: ' + startData);
+    // console.log('stop: ' + stopData);
+    // console.log(arrayOfFutureDays);
 
     arrayOfFutureDays.forEach((value) => {
       if (this.lineChartLabels.includes(value)) {
@@ -189,6 +189,5 @@ export class RatesComponent implements OnInit {
         (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value });
       }
     });
-
   }
 }
