@@ -16,12 +16,12 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
-# Cloud function
+## Cloud function
 
 `cd functions`
-`firebase emulators:start`
+`firebase emulators:start --only functions`
 
-# Deployment
+## Deployment
 
 `ng build`
 `firebase deploy`
