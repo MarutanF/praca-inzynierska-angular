@@ -106,10 +106,6 @@ export class PlaygroundComponent implements OnInit {
   }
 
   async ngOnInit() {
-    await this.predictService.train();
-    console.log(this.predictService.predict(4.0));
-    // console.log(this.predictService.predict(8));
-    // console.log((new Date('2019-01-01')).valueOf());
   }
 
   public randomize(): void {
