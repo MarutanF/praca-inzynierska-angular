@@ -69,4 +69,15 @@ export class NBPRatesService {
     return ratesArray;
   }
 
+  checkNBPStatus() {
+    return this.http.get<any>(`${this.apiURL}/exchangerates/rates/a/usd/`).toPromise().then(
+      (value) => {
+        return true;
+      },
+      (err) => {
+        return false;
+      }
+    );
+  }
+
 }

@@ -18,6 +18,8 @@ export interface Point {
 })
 export class RatesComponent implements OnInit {
 
+  public isNBPServerAvailable: boolean = true;
+
   // CURRENCIES DROPDOWN
   public listOfCurrencies: Currency[] = [];
   public selectedCurrency: Currency;
@@ -90,13 +92,14 @@ export class RatesComponent implements OnInit {
   private arrayOfDates: Array<string> = [];
 
   constructor(
-    private rateService: NBPRatesService,
+    public rateService: NBPRatesService,
     private currenciesService: NBPCurrenciesService,
     private periodService: NBPPeriodService,
     private predictService: PredictService) {
   }
 
   async ngOnInit() {
+    this.checkNBPServer();
     this.initializePeriodList();
     await this.initializeCurrenciesDropdown();
     this.updateCharts();
@@ -105,6 +108,10 @@ export class RatesComponent implements OnInit {
   initializePeriodList() {
     this.periodList = this.periodService.getPeriodsList();
     this.selectedPeriod = this.periodList[0];
+  }
+
+  async checkNBPServer(){
+    this.rateService.checkNBPStatus().then(value => this.isNBPServerAvailable = value);
   }
 
   async initializeCurrenciesDropdown() {

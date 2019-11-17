@@ -10,6 +10,8 @@ import { NBPCalculatorService } from '../services/nbp-calculator.service';
 })
 export class CalculatorComponent implements OnInit {
 
+  public isNBPServerAvailable: boolean = true;
+
   public listOfCurrencies: Currency[] = [];
   public conversionRatio: number = 1;
 
@@ -25,8 +27,13 @@ export class CalculatorComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.checkNBPServer();
     await this.initializeCurrenciesDropdowns();
     this.updateHave2Want();
+  }
+
+  async checkNBPServer(){
+    this.rateService.checkNBPStatus().then(value => this.isNBPServerAvailable = value);
   }
 
   async initializeCurrenciesDropdowns() {

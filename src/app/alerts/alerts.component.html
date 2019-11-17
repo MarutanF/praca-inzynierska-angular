@@ -2,13 +2,23 @@
 
 <br>
 
-<h5>Alerty optymalne</h5>
+<div *ngIf="!isFirebaseServerAvailable" class="alert alert-danger" role="alert">
+        Serwer Firebase jest w tej chwili niedostępny.
+</div>
 
-<app-optimal-alerts></app-optimal-alerts>
+<div style="padding-bottom: 5vh;">
+        <h5>Alerty optymalne</h5>
+        <app-optimal-alerts ></app-optimal-alerts>
+</div>
 
-<h5>Alerty poniżej kwoty</h5>
+<div style="padding-bottom: 3vh;">
+        <h5>Alerty poniżej kwoty</h5>
+        <app-amount-alerts></app-amount-alerts>
+</div>
 
-<app-amount-alerts></app-amount-alerts>
+
+
+
 
 
 

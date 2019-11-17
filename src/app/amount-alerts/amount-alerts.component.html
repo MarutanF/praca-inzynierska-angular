@@ -10,11 +10,12 @@
     </thead>
     <tbody>
         <tr *ngFor="let alert of alert$ | async; index as i">
-            <th style="width: 10%;" scope="row" >{{ i + 1 }}</th>
-            <td style="width: 40%;">{{ alert.currencyCode }}</td>
-            <td style="width: 30%;">{{ alert.expireDate | date:'yyyy-MM-dd' }}</td>
-            <td style="width: 10%;">{{ alert.amount }}</td>
-            <td style="width: 10%;"><button type="button" class="btn btn-outline-danger" (click)="deleteAlert(alert)">Usuń</button></td>
+            <th style="width: 10%;" scope="row">{{ i + 1 }}</th>
+            <td style="width: 30%;">{{ alert.currencyCode }}</td>
+            <td style="width: 100%; min-width: 100px;">{{ alert.expireDate | date:'yyyy-MM-dd' }}</td>
+            <td style="width: 100%; max-width: 50px;">{{ alert.amount }}</td>
+            <td style="width: 10%;"><button type="button" class="btn btn-outline-danger"
+                        (click)="deleteAlert(alert)">Usuń</button></td>
         </tr>
         <tr>
             <th scope="row"></th>
@@ -31,7 +32,7 @@
             <td>
                 <form class="form-inline" #f="ngForm">
                     <div class="form-group">
-                        <div class="input-group">
+                        <div class="input-group" style="padding-right: 20px;">
                             <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="selectedData"
                                    ngbDatepicker #d="ngbDatepicker" [minDate]="getMinDate()" required>
                             <div class="input-group-append">

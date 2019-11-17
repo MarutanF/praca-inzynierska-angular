@@ -2,6 +2,10 @@
 
 <br>
 
+<div *ngIf="!isNBPServerAvailable" class="alert alert-danger" role="alert" style="margin: 0;">
+    Serwer NBP jest w tej chwili niedostępny.
+</div>
+
 <div id="currenciesDropdown">
     <p>1</p>
     <ng-select [items]="listOfCurrencies" [(ngModel)]="selectedCurrency" [clearable]="false" bindLabel="name"
@@ -44,5 +48,5 @@
             </span>
         </div>
     </div>
-    
+
 </div>

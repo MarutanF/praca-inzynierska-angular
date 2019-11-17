@@ -2,6 +2,10 @@
 
 <br>
 
+<div *ngIf="!isNBPServerAvailable" class="alert alert-danger" role="alert">
+    Serwer NBP jest w tej chwili niedostępny.
+</div>
+
 <form>
     <div class="container">
         <div class="row">
@@ -11,27 +15,13 @@
                     <div class="card-body">
                         <span id="currenciesDropdownHave">
                             <div class="form-group">
-                                <input
-                                    name="amountHaveInput"
-                                    class="form-control"
-                                    type="number"
-                                    [(ngModel)]="amountHave"
-                                    (input)="onChangedAmountHave()"
-                                />
+                                <input name="amountHaveInput" class="form-control" type="number"
+                                       [(ngModel)]="amountHave" (input)="onChangedAmountHave()" />
                             </div>
-                            <ng-select
-                                name="amountHaveSelect"
-                                [items]="listOfCurrencies"
-                                [(ngModel)]="selectedCurrencyHave"
-                                [clearable]="false"
-                                bindLabel="name"
-                                groupBy="groupCode"
-                                (change)="onSelectedCurrencyChangeHave($event)"
-                            >
-                                <ng-template
-                                    ng-notfound-tmp
-                                    let-searchTerm="searchTerm"
-                                >
+                            <ng-select name="amountHaveSelect" [items]="listOfCurrencies"
+                                       [(ngModel)]="selectedCurrencyHave" [clearable]="false" bindLabel="name"
+                                       groupBy="groupCode" (change)="onSelectedCurrencyChangeHave($event)">
+                                <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                                     <div class="ng-option disabled">
                                         No data found for "{{searchTerm}}"
                                     </div>
@@ -47,27 +37,13 @@
                     <div class="card-body">
                         <span id="currenciesDropdownWant">
                             <div class="form-group">
-                                <input
-                                    name="amountWantInput"
-                                    class="form-control"
-                                    type="number"
-                                    [(ngModel)]="amountWant"
-                                    (input)="onChangedAmountWant()"
-                                >
+                                <input name="amountWantInput" class="form-control" type="number"
+                                       [(ngModel)]="amountWant" (input)="onChangedAmountWant()">
                             </div>
-                            <ng-select
-                                name="amountWantSelect"
-                                [items]="listOfCurrencies"
-                                [(ngModel)]="selectedCurrencyWant"
-                                [clearable]="false"
-                                bindLabel="name"
-                                groupBy="groupCode"
-                                (change)="onSelectedCurrencyChangeWant($event)"
-                            >
-                                <ng-template
-                                    ng-notfound-tmp
-                                    let-searchTerm="searchTerm"
-                                >
+                            <ng-select name="amountWantSelect" [items]="listOfCurrencies"
+                                       [(ngModel)]="selectedCurrencyWant" [clearable]="false" bindLabel="name"
+                                       groupBy="groupCode" (change)="onSelectedCurrencyChangeWant($event)">
+                                <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
                                     <div class="ng-option disabled">
                                         No data found for "{{searchTerm}}"
                                     </div>
@@ -85,10 +61,7 @@
 
 <div class="container">
     <div class="row">
-        <div
-            class="col"
-            style="text-align: center;"
-        >
+        <div class="col" style="text-align: center;">
             <p> {{ amountHave }} {{ selectedCurrencyHave?.code}} = {{ amountWant }} {{ selectedCurrencyWant?.code }}</p>
             <p> 1 {{ selectedCurrencyHave?.code }} = {{ conversionRatio | number : '1.2-2' }}
                 {{ selectedCurrencyWant?.code }}</p>

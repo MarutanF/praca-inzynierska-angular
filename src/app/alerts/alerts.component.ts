@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FirebaseOptimalAlertsService, OptimalAlert } from '../services/firebase-optimal-alerts.service';
 import { Currency, NBPCurrenciesService } from '../services/nbp-currencies.service';
+import { FirebaseService } from '../services/firebase.service';
 
 @Component({
   selector: 'app-alerts',
@@ -10,6 +11,16 @@ import { Currency, NBPCurrenciesService } from '../services/nbp-currencies.servi
 
 export class AlertsComponent implements OnInit {
 
-  ngOnInit() {  }
+  public isFirebaseServerAvailable: boolean = true;
+
+  constructor(private firebaseService: FirebaseService){}
+
+  ngOnInit() {
+    this.checkFirebaseServer();
+  }
+
+  async checkFirebaseServer(){
+    this.firebaseService.checkFirebaseStatus().then((value) => this.isFirebaseServerAvailable = value);
+  }
 
 }
