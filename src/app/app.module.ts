@@ -26,6 +26,8 @@ import { UserComponent } from './user/user.component';
 import { RegulationComponent } from './regulation/regulation.component';
 import { AboutUsComponent } from './about-us/about-us.component';
 import { HelpComponent } from './help/help.component';
+import { OptimalAlertsComponent } from './optimal-alerts/optimal-alerts.component';
+import { AmountAlertsComponent } from './amount-alerts/amount-alerts.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { HelpComponent } from './help/help.component';
     UserComponent,
     RegulationComponent,
     AboutUsComponent,
-    HelpComponent
+    HelpComponent,
+    OptimalAlertsComponent,
+    AmountAlertsComponent
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebase),
