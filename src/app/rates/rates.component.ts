@@ -4,6 +4,7 @@ import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import { Currency, NBPCurrenciesService } from '../services/nbp-currencies.service';
 import { NBPPeriodService, Period } from '../services/nbp-period.service';
 import { NBPRatesService, Rate } from '../services/nbp-rates.service';
+import { PredictService } from '../services/predict.service';
 
 export interface Point {
   y: number;
@@ -91,13 +92,17 @@ export class RatesComponent implements OnInit {
   constructor(
     private rateService: NBPRatesService,
     private currenciesService: NBPCurrenciesService,
-    private periodService: NBPPeriodService) {
+    private periodService: NBPPeriodService,
+    private predictService: PredictService) {
   }
 
   async ngOnInit() {
     this.initializePeriodList();
     await this.initializeCurrenciesDropdown();
     this.updateCharts();
+
+    console.log(this.predictService.testFun());
+
   }
 
   initializePeriodList() {
