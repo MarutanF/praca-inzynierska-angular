@@ -100,9 +100,6 @@ export class RatesComponent implements OnInit {
     this.initializePeriodList();
     await this.initializeCurrenciesDropdown();
     this.updateCharts();
-
-    console.log(this.predictService.testFun());
-
   }
 
   initializePeriodList() {
@@ -184,14 +181,15 @@ export class RatesComponent implements OnInit {
     // console.log('stop: ' + stopData);
     // console.log(arrayOfFutureDays);
 
-    arrayOfFutureDays.forEach((value) => {
-      if (this.lineChartLabels.includes(value)) {
+    let model = this.predictService.createModel(this.arrayOfResponses);
+    arrayOfFutureDays.forEach((day) => {
+      if (this.lineChartLabels.includes(day)) {
         // data zostala dodana do label wczesniej, wiec nie dodaje ponownie
         // data zostala dodana wczesniej bo ten dzien juz minal, wiec predykcja to ostatnia wartosc
-        (this.lineChartData[2].data as Array<Point>).push({ y: lastPointInHistory.y, x: value });
+        (this.lineChartData[2].data as Array<Point>).push({ y: lastPointInHistory.y, x: day });
       } else {
-        this.lineChartLabels.push(value);
-        (this.lineChartData[2].data as Array<Point>).push({ y: 4, x: value });
+        this.lineChartLabels.push(day);
+        (this.lineChartData[2].data as Array<Point>).push({ y: this.predictService.predict(model, day), x: day });
       }
     });
   }
