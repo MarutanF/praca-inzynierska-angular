@@ -1,6 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 
 admin.initializeApp(functions.config().firebase);
 
@@ -45,7 +46,7 @@ let message = {
     html: '<p><b>Hello</b> to myself!</p>'
 };
 
-async function sendEmail(message){
+async function sendEmail(message) {
     try {
         let testAccount = await createTestAccount();
         console.log('Credentials obtained, sending message...');
@@ -65,25 +66,37 @@ exports.sendEmailHttp = functions.https.onRequest(async (request, response) => {
     return response.send("Email send");
 });
 
-exports.readDatabse = functions.https.onRequest((request, response) => {
+exports.readDatabse = functions.https.onRequest(async (request, response) => {
     console.log('Database console');
 
     let db = admin.firestore();
-    console.log(JSON.stringify(db));
 
     db.collection('amountAlert')
         .get()
         .then(
             snapshot => {
                 snapshot.forEach(doc => {
-                    console.log(doc);
+                    console.log(doc.data());
                 })
             }
         )
         .catch(error => {
             console.log(error);
-        });
+        })
+        .finally(() => {
+            return response.send("Database response");
+        }
+        );
+});
 
-    response.send("Database response");
-
+exports.downloadData = functions.https.onRequest(async (request, response) => {
+    const url = "https://jsonplaceholder.typicode.com/posts/1";
+    try {
+        const response = await axios.default.get(url);
+        const data = response.data;
+        console.log(JSON.stringify(data));
+    } catch (error) {
+        console.log(error);
+    }
+    return response.send("Data downloaded");
 });
