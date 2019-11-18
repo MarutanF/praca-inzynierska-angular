@@ -12,50 +12,57 @@ exports.testMessage = functions.https.onRequest((request, response) => {
     console.log('Test message console');
 });
 
-exports.sendEmailHttp = functions.https.onRequest((request, response) => {
-    nodemailer.createTestAccount((err, account) => {
-        if (err) {
-            console.error('Failed to create a testing account. ' + err.message);
-            return process.exit(1);
+let testAccount = null;
+async function createTestAccount() {
+    if (testAccount === null) {
+        testAccount = await nodemailer.createTestAccount();
+        return testAccount;
+    }
+    return testAccount;
+}
+
+function getTransporter(account) {
+    const transporter = nodemailer.createTransport({
+        host: account.smtp.host,
+        port: account.smtp.port,
+        secure: account.smtp.secure,
+        auth: {
+            user: account.user,
+            pass: account.pass
+        },
+        tls: {
+            rejectUnauthorized: false
         }
-
-        console.log('Credentials obtained, sending message...');
-
-        // Create a SMTP transporter object
-        let transporter = nodemailer.createTransport({
-            host: account.smtp.host,
-            port: account.smtp.port,
-            secure: account.smtp.secure,
-            auth: {
-                user: account.user,
-                pass: account.pass
-            },
-            tls: {
-                rejectUnauthorized: false
-            }
-        });
-
-        // Message object
-        let message = {
-            from: 'Sender Name <sender@example.com>',
-            to: 'Recipient <recipient@example.com>',
-            subject: 'Nodemailer is unicode friendly ✔',
-            text: 'Hello to myself!',
-            html: '<p><b>Hello</b> to myself!</p>'
-        };
-
-        transporter.sendMail(message, (err, info) => {
-            if (err) {
-                console.log('Error occurred. ' + err.message);
-                return process.exit(1);
-            }
-
-            console.log('Message sent: %s', info.messageId);
-            // Preview only available when sending through an Ethereal account
-            console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-        });
     });
-    response.send("Email send");
+    return transporter;
+}
+
+let message = {
+    from: 'Sender Name <sender@example.com>',
+    to: 'Recipient <recipient@example.com>',
+    subject: 'Nodemailer subject',
+    text: 'Hello to myself!',
+    html: '<p><b>Hello</b> to myself!</p>'
+};
+
+async function sendEmail(message){
+    try {
+        let testAccount = await createTestAccount();
+        console.log('Credentials obtained, sending message...');
+        let transporter = getTransporter(testAccount);
+        let info = await transporter.sendMail(message);
+        console.log('Message sent: %s', info.messageId);
+        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+    }
+    catch (error) {
+        console.log('Error ' + error);
+        return process.exit(1);
+    }
+};
+
+exports.sendEmailHttp = functions.https.onRequest(async (request, response) => {
+    await sendEmail(message);
+    return response.send("Email send");
 });
 
 exports.readDatabse = functions.https.onRequest((request, response) => {
