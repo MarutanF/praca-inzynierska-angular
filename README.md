@@ -25,3 +25,11 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 `ng build`
 `firebase deploy`
+
+# Cloud function with datastore
+
+Due to credential issue, function work only if it is deployed.
+
+(to test in local emulator)
+install Google Cloud SDK (https://cloud.google.com/sdk/docs/downloads-interactive)
+login `gcloud auth application-default login`
