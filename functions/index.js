@@ -3,14 +3,14 @@ const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
 const serviceAccount = require("./serviceAccountKey.json");
-// fake SMTP service = Ethereal
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://praca-inzynierska-firebase.firebaseio.com"
 });
 
-// EXAMPLE FUNCTION
+// EXAMPLE FUNCTION --------------------
+
 exports.testMessageHttp = functions.https.onRequest((request, response) => {
     response.send("Test message http");
     console.log('Test message console');
@@ -63,7 +63,19 @@ exports.downloadDataHttp = functions.https.onRequest(async (request, response) =
     return response.send("Data downloaded");
 });
 
-// END EXAMPLE FUNCTION
+// EMAIL (fake SMTP service = Ethereal) --------------------
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    auth: {
+        user: 'pierre.parisian@ethereal.email',
+        pass: 'FRKhyEX4qkKPntRpuZ'
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
 
 async function sendEmail(message) {
     try {
@@ -77,62 +89,35 @@ async function sendEmail(message) {
     }
 };
 
-// for sendEmail
-const transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
-    port: 587,
-    auth: {
-        user: 'pierre.parisian@ethereal.email',
-        pass: 'FRKhyEX4qkKPntRpuZ'
-    },
-    tls: {
-        rejectUnauthorized: false
-    }
-});
+// ALERT --------------------
 
-exports.checkAmountAlertHttp = functions.https.onRequest(async (request, response) => {
-    await checkAmountAlert();
-    return response.send("Amount alert evaluation end");
-});
-
-exports.checkAmountAlertScheduled = functions.pubsub.schedule('every 1 day').onRun((context) => {
-    checkAmountAlert();
-    return null;
-});
-
-async function checkAmountAlert() {
-    let arrayOfAlerts = await getArrayOfAmountAlert();
-
-    arrayOfAlerts.forEach(async (alert) => {
-        console.log('Alert: ' + JSON.stringify(alert));
-        let currentRate = await getCurrentRate(alert.currencyCode);
-        if (checkIfAlertExpire(alert) || currentRate <= alert.amount) {
-            await sendEmailAlert(alert, currentRate);
-            await deleteAmountAlert(alert.docId);
-        }
-    });
+const alertType = {
+    AMOUNT: 'amountAlert',
+    OPTIMAL: 'optimalAlerts'
 }
 
-async function deleteAmountAlert(docId) {
+async function deleteAlert(alertType, docId) {
 
     let db = admin.firestore();
 
-    return db.collection('amountAlert')
+    return db.collection(alertType)
         .doc(docId)
         .delete();
 }
 
-async function getArrayOfAmountAlert() {
+async function getArrayOfAmountAlert(alertType) {
 
     let db = admin.firestore();
 
-    return db.collection('amountAlert')
+    return db.collection(alertType)
         .get()
         .then((snapshot) => {
             let arrayOfAlerts = [];
             snapshot.forEach(doc => {
+                // console.log(JSON.stringify(doc));
                 let amountAlert = doc.data();
                 amountAlert.docId = doc._ref._path.segments[1];
+                amountAlert.createTime = new Date(doc._createTime._seconds * 1000);
                 arrayOfAlerts.push(amountAlert);
             });
             return arrayOfAlerts;
@@ -141,17 +126,6 @@ async function getArrayOfAmountAlert() {
             console.log('Error ' + error);
             return process.exit(1);
         });
-}
-
-function checkIfAlertExpire(alert) {
-    // check if expire date is equal today
-    // date is unix timestamp
-    let expireDate = new Date(alert.expireDate._seconds * 1000);
-    let today = new Date();
-    // set hours and minutes to 0 for comparing
-    expireDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    return (expireDate.valueOf() <= today.valueOf());
 }
 
 async function sendEmailAlert(alert, currentRate) {
@@ -198,3 +172,92 @@ async function getCurrentRate(currencyCode) {
     }
 }
 
+async function getRateForDay(currencyCode, day) {
+    let dayFormatted = day.toISOString().slice(0, 10);
+    try {
+        const urlA = `http://api.nbp.pl/api/exchangerates/rates/a/${currencyCode}/${dayFormatted}/`;
+        const response = await axios.default.get(urlA);
+        const data = response.data.rates[0].mid;
+        return data;
+    } catch (error) {
+        try {
+            const urlB = `http://api.nbp.pl/api/exchangerates/rates/b/${currencyCode}/${dayFormatted}/`;
+            const response = await axios.default.get(urlB);
+            const data = response.data.rates[0].mid;
+            return data;
+        } catch (error) {
+            return Number.MAX_VALUE;
+        }
+    }
+}
+
+// AMOUNT ALERT --------------------
+
+exports.checkAmountAlertHttp = functions.https.onRequest(async (request, response) => {
+    await checkAmountAlert();
+    return response.send("Amount alert evaluation end");
+});
+
+exports.checkAmountAlertScheduled = functions.pubsub.schedule('every 1 day').onRun((context) => {
+    checkAmountAlert();
+    return null;
+});
+
+async function checkAmountAlert() {
+    let arrayOfAlerts = await getArrayOfAmountAlert(alertType.AMOUNT);
+
+    arrayOfAlerts.forEach(async (alert) => {
+        console.log('Amount alert: ' + JSON.stringify(alert));
+        let currentRate = await getCurrentRate(alert.currencyCode);
+        if (checkIfAlertExpire(alert) || currentRate <= alert.amount) {
+            await sendEmailAlert(alert, currentRate);
+            await deleteAlert(alertType.AMOUNT, alert.docId);
+        }
+    });
+}
+
+function checkIfAlertExpire(alert) {
+    // check if expire date is equal today
+    // date is unix timestamp
+    let expireDate = new Date(alert.expireDate._seconds * 1000);
+    let today = new Date();
+    // set hours and minutes to 0 for comparing
+    expireDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+    return (expireDate.valueOf() <= today.valueOf());
+}
+
+// OPTIMAL ALERT --------------------
+
+exports.checkOptimalAlertHttp = functions.https.onRequest(async (request, response) => {
+    await checkOptimalAlert();
+    return response.send("Optimal alert evaluation end");
+});
+
+exports.checkOptimalAlertScheduled = functions.pubsub.schedule('every 1 day').onRun((context) => {
+    checkOptimalAlert();
+    return null;
+});
+
+async function checkOptimalAlert() {
+    let arrayOfAlerts = await getArrayOfAmountAlert(alertType.OPTIMAL);
+
+    arrayOfAlerts.forEach(async (alert) => {
+        console.log('Optimal alert: ' + JSON.stringify(alert));
+        let creationRate = await getRateForDay(alert.currencyCode, alert.createTime);
+        let currentRate = await getCurrentRate(alert.currencyCode);
+        if (checkIfAlertExpire(alert) || isRateOptimal(creationRate, currentRate)) {
+            await sendEmailAlert(alert, currentRate);
+            await deleteAlert(alertType.OPTIMAL, alert.docId);
+        }
+    });
+}
+
+function isRateOptimal(creationRate, currentRate){
+    if(currentRate < (creationRate * 0.9)){
+        return true;
+    }
+    return false;
+}
+
+// OTHER -------------------- 
