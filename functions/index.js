@@ -2,9 +2,13 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
+const serviceAccount = require("./serviceAccountKey.json");
 // fake SMTP service = Ethereal
 
-admin.initializeApp(functions.config().firebase);
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://praca-inzynierska-firebase.firebaseio.com"
+});
 
 // EXAMPLE FUNCTION
 exports.testMessageHttp = functions.https.onRequest((request, response) => {
@@ -86,27 +90,37 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-exports.checkAmountAlert = functions.https.onRequest(async (request, response) => {
+exports.checkAmountAlertHttp = functions.https.onRequest(async (request, response) => {
+    await checkAmountAlert();
+    return response.send("Amount alert evaluation end");
+});
 
+exports.checkAmountAlertScheduled = functions.pubsub.schedule('every 1 day').onRun((context) => {
+    checkAmountAlert();
+    return null;
+});
+
+async function checkAmountAlert() {
     let arrayOfAlerts = await getArrayOfAmountAlert();
 
     arrayOfAlerts.forEach(async (alert) => {
         console.log('Alert: ' + JSON.stringify(alert));
-
-        if (checkIfAlertExpire(alert) === true) {
-            await sendEmailAlert(alert);
-            // delete alert from database
-        }
-
-        // testing rate
         let currentRate = await getCurrentRate(alert.currencyCode);
-        console.log('currentRate');
-        console.log(currentRate);
-
+        if (checkIfAlertExpire(alert) || currentRate <= alert.amount) {
+            await sendEmailAlert(alert, currentRate);
+            await deleteAmountAlert(alert.docId);
+        }
     });
+}
 
-    return response.send("Amount alert evaluation end");
-});
+async function deleteAmountAlert(docId) {
+
+    let db = admin.firestore();
+
+    return db.collection('amountAlert')
+        .doc(docId)
+        .delete();
+}
 
 async function getArrayOfAmountAlert() {
 
@@ -118,6 +132,7 @@ async function getArrayOfAmountAlert() {
             let arrayOfAlerts = [];
             snapshot.forEach(doc => {
                 let amountAlert = doc.data();
+                amountAlert.docId = doc._ref._path.segments[1];
                 arrayOfAlerts.push(amountAlert);
             });
             return arrayOfAlerts;
@@ -130,50 +145,56 @@ async function getArrayOfAmountAlert() {
 
 function checkIfAlertExpire(alert) {
     // check if expire date is equal today
-    console.log(alert.expireDate);
     // date is unix timestamp
     let expireDate = new Date(alert.expireDate._seconds * 1000);
     let today = new Date();
     // set hours and minutes to 0 for comparing
     expireDate.setHours(0, 0, 0, 0);
     today.setHours(0, 0, 0, 0);
-    return (expireDate.valueOf() === today.valueOf());
+    return (expireDate.valueOf() <= today.valueOf());
 }
 
-async function sendEmailAlert(amountAlert) {
+async function sendEmailAlert(alert, currentRate) {
 
-    let userData = await getUserData(amountAlert.userId);
-    let rate = await getCurrentRate(amountAlert.currencyCode);
+    let userEmail = await getUserEmail(alert.userId);
 
     let message = {
         from: `Sender Name <sender@example.com>`,
-        to: `Recipient <${userData}>`,
+        to: `Recipient <${userEmail}>`,
         subject: `Alert walutowy`,
-        text: `Kurs waluty ${amountAlert.currencyCode} wynosi ${rate}.`,
+        text: `Kurs waluty ${alert.currencyCode} wynosi ${currentRate}.`,
         html: ``
     };
 
     await sendEmail(message);
 }
 
-async function getUserData(userId) {
-    return `${userId}@example.com`;
+async function getUserEmail(userId) {
+    return admin.auth().getUser(userId)
+        .then(function (userRecord) {
+            return userRecord.providerData[0].email;
+        })
+        .catch(function (error) {
+            console.log('Error ' + error);
+            return process.exit(1);
+        });
 }
 
 async function getCurrentRate(currencyCode) {
     try {
         const urlA = `http://api.nbp.pl/api/exchangerates/rates/a/${currencyCode}/`;
         const response = await axios.default.get(urlA);
-        const data = response.data;
+        const data = response.data.rates[0].mid;
         return data;
     } catch (error) {
         try {
             const urlB = `http://api.nbp.pl/api/exchangerates/rates/b/${currencyCode}/`;
             const response = await axios.default.get(urlB);
-            const data = response.data;
+            const data = response.data.rates[0].mid;
             return data;
         } catch (error) {
             return Number.MAX_VALUE;
         }
     }
 }
+
