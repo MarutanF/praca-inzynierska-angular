@@ -39,16 +39,14 @@ exports.readDatabseHttp = functions.https.onRequest(async (request, response) =>
             snapshot => {
                 snapshot.forEach(doc => {
                     console.log(doc.data());
-                })
+                });
+                return response.send("Database response");
             }
         )
         .catch(error => {
             console.log(error);
+            return response.send("Database response with error");
         })
-        .finally(() => {
-            return response.send("Database response");
-        }
-        );
 });
 
 exports.downloadDataHttp = functions.https.onRequest(async (request, response) => {
@@ -87,7 +85,7 @@ async function sendEmail(message) {
         console.log('Error ' + error);
         return process.exit(1);
     }
-};
+}
 
 // ALERT --------------------
 

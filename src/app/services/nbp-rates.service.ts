@@ -14,7 +14,7 @@ export interface Rate {
   providedIn: 'root'
 })
 export class NBPRatesService {
-  apiURL = 'http://api.nbp.pl/api/';
+  apiURL = 'https://api.nbp.pl/api/';
 
   constructor(
     private http: HttpClient,

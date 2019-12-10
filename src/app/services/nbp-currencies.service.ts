@@ -14,7 +14,7 @@ export interface Currency {
   providedIn: 'root'
 })
 export class NBPCurrenciesService {
-  apiURL = 'http://api.nbp.pl/api/';
+  apiURL = 'https://api.nbp.pl/api/';
   apiTableA = 'exchangerates/tables/a/';
   apiTableB = 'exchangerates/tables/b/';
   private listOfFavoriteCurrencies = ['EUR', 'USD', 'CHF', 'GBP', 'PLN'];
