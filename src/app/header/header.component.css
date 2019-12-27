@@ -32,6 +32,12 @@
     }
 }
 
+@media (max-width: 576px) {
+    #headerLogo{
+        display: none;
+    }
+}
+
 #navbarDropdown2{
     padding-right: 1rem;
 }
