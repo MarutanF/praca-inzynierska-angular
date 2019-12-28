@@ -1,5 +1,5 @@
 import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, logging, element, by } from 'protractor';
 
 describe('workspace-project App', () => {
   let page: AppPage;
@@ -8,9 +8,15 @@ describe('workspace-project App', () => {
     page = new AppPage();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('praca-inzynierska-angular app is running!');
+  // it('example test', () => {
+  //   page.navigateTo();
+  //   expect(page.getTitleText()).toEqual('PracaInzynierskaAngular');
+  // });
+
+  it('should display title element in login page', () => {
+    browser.get('http://localhost:4200/login');
+    let title = element(by.xpath('//h3[text()="Logowanie"]'));
+    expect(title.isPresent()).toBe(true);
   });
 
   afterEach(async () => {
