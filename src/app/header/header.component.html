@@ -18,8 +18,8 @@
     </ul>
     <ul class="navbar-nav ml-auto">
         <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
-            <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button">
-                <img src="assets/icons/_ionicons_svg_md-contact.svg" id="imageUser">
+            <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button" aria-label="dropdown with users' page link">
+                <img src="assets/icons/_ionicons_svg_md-contact.svg" id="imageUser" alt="icon with human form">
             </a>
             <div ngbDropdownMenu aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
                 <div *ngIf="!authService.isUserLogged()">
