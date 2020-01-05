@@ -78,7 +78,6 @@ const transporter = nodemailer.createTransport({
 async function sendEmail(message) {
     try {
         let info = await transporter.sendMail(message);
-        // console.log('Message sent: %s', info.messageId);
         console.log('Email sent - Preview URL: %s', nodemailer.getTestMessageUrl(info));
     }
     catch (error) {
@@ -112,7 +111,6 @@ async function getArrayOfAmountAlert(alertType) {
         .then((snapshot) => {
             let arrayOfAlerts = [];
             snapshot.forEach(doc => {
-                // console.log(JSON.stringify(doc));
                 let amountAlert = doc.data();
                 amountAlert.docId = doc._ref._path.segments[1];
                 amountAlert.createTime = new Date(doc._createTime._seconds * 1000);
@@ -257,5 +255,3 @@ function isRateOptimal(creationRate, currentRate){
     }
     return false;
 }
-
-// OTHER -------------------- 

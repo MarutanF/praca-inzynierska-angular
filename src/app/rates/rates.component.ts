@@ -149,8 +149,6 @@ export class RatesComponent implements OnInit {
       () => {
         console.log('Response - connection to NBP with rates: ');
         console.log(this.arrayOfResponses);
-        // console.log(this.lineChartData[0].data);
-        // console.log(this.lineChartLabels);
 
         this.addValueToFirstDate();
         this.updateChartAverage();
@@ -184,15 +182,10 @@ export class RatesComponent implements OnInit {
     const stopData = this.periodService.getStopDateForecast(this.selectedPeriod);
     const arrayOfFutureDays = this.periodService.getDatesBetween(startData, stopData);
 
-    // console.log('start: ' + startData);
-    // console.log('stop: ' + stopData);
-    // console.log(arrayOfFutureDays);
-
     let model = this.predictService.createModel(this.arrayOfResponses);
     arrayOfFutureDays.forEach((day) => {
       if (this.lineChartLabels.includes(day)) {
-        // data zostala dodana do label wczesniej, wiec nie dodaje ponownie
-        // data zostala dodana wczesniej bo ten dzien juz minal, wiec predykcja to ostatnia wartosc
+        // day was added to lineChartLabel before, so prediction value is last known value
         (this.lineChartData[2].data as Array<Point>).push({ y: lastPointInHistory.y, x: day });
       } else {
         this.lineChartLabels.push(day);

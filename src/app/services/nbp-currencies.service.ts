@@ -101,7 +101,7 @@ export class NBPCurrenciesService {
       name: 'polski złoty',
       groupCode: 'Ulubione'
     };
-    currenciesList.unshift(plnCurrency); //add at [0]
+    currenciesList.unshift(plnCurrency);
     return currenciesList;
   }
 

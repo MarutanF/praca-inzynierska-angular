@@ -17,7 +17,6 @@ import { FooterComponent } from './footer/footer.component';
 import { RatesComponent } from './rates/rates.component';
 import { CalculatorComponent } from './calculator/calculator.component';
 import { AlertsComponent } from './alerts/alerts.component';
-import { PlaygroundComponent } from './playground/playground.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CacheInterceptor } from './cache/cache-interceptor';
 import { LoginComponent } from './login/login.component';
@@ -37,7 +36,6 @@ import { AmountAlertsComponent } from './amount-alerts/amount-alerts.component';
     RatesComponent,
     CalculatorComponent,
     AlertsComponent,
-    PlaygroundComponent,
     LoginComponent,
     RegisterComponent,
     UserComponent,

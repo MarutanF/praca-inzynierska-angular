@@ -1,4 +1,3 @@
-// https://www.freakyjolly.com/angular-7-6-firebase-login-with-email-google-gmail-account-with-reset-password/
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 

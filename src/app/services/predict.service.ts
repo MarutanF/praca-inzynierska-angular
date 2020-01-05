@@ -33,8 +33,7 @@ export class PredictService {
   }
 
   test() {
-    // should be y = 0,5 x + 0
-    const result = regression.linear([[2, 4], [4, 8]]);
+    const result = regression.linear([[2, 4], [4, 8]]); // result should be y = 0,5 x + 0
     return result;
   }
 

@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { RatesComponent } from './rates/rates.component';
 import { CalculatorComponent } from './calculator/calculator.component';
 import { AlertsComponent } from './alerts/alerts.component';
-import { PlaygroundComponent } from './playground/playground.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
@@ -21,7 +20,6 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'user', component: UserComponent, canActivate: [AuthGuard] },
-    { path: 'playground', component: PlaygroundComponent },
     { path: 'regulation', component: RegulationComponent },
     { path: 'about-us', component: AboutUsComponent },
     { path: 'help', component: HelpComponent },
