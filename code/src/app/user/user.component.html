@@ -1,0 +1,4 @@
+<h3>Konto użytkownika</h3>
+<br>
+<p>Email: {{ authService.getUser().email }} </p>
+<p>Ostatnie logowanie: {{ authService.getUser().lastLoginAt |  date:'yyyy-MM-dd' }} </p>

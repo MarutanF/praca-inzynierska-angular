@@ -1,0 +1,33 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-light" id="headerLogo">
+    <img src="//placehold.it/500x100?text=Logo" class="img-responsive" id="imageLogo" alt="logo">
+</nav>
+<nav class="navbar navbar-expand-sm navbar-light bg-light" id="headerMenu">
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/rates">KURSY</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/calculator">KALKULATOR</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+            <a class="nav-link" routerLink="/alerts">ALERTY</a>
+        </li>
+    </ul>
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item" ngbDropdown display="dynamic" placement="bottom-right">
+            <a class="nav-link" style="cursor: pointer" ngbDropdownToggle id="navbarDropdown2" role="button" aria-label="dropdown with users' page link">
+                <img src="assets/icons/_ionicons_svg_md-contact.svg" id="imageUser" alt="icon with human form">
+            </a>
+            <div ngbDropdownMenu aria-labelledby="navbarDropdown" class="dropdown-menu dropdown-menu-right">
+                <div *ngIf="!authService.isUserLogged()">
+                    <a ngbDropdownItem routerLink="/login">Logowanie</a>
+                    <a ngbDropdownItem routerLink="/register">Rejestracja</a>
+                </div>
+                <div *ngIf="authService.isUserLogged()">
+                    <a ngbDropdownItem routerLink="/user">Konto</a>
+                    <a ngbDropdownItem routerLink="/" (click)="authService.logout()">Wyloguj</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>

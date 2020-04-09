@@ -1,0 +1,24 @@
+<h3>Alerty walutowe</h3>
+
+<br>
+
+<div *ngIf="!isFirebaseServerAvailable" class="alert alert-danger" role="alert">
+        Serwer Firebase jest w tej chwili niedostępny.
+</div>
+
+<div style="padding-bottom: 5vh;">
+        <h5>Alerty optymalne</h5>
+        <app-optimal-alerts ></app-optimal-alerts>
+</div>
+
+<div style="padding-bottom: 3vh;">
+        <h5>Alerty kwotowe</h5>
+        <app-amount-alerts></app-amount-alerts>
+</div>
+
+
+
+
+
+
+

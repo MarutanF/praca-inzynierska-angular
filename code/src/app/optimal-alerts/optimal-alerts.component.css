@@ -1,0 +1,11 @@
+button.calendar, button.calendar:active {
+    background-image: url("/assets/icons/_ionicons_svg_md-calendar.svg");
+    width: 3rem;
+    background-repeat: no-repeat;
+    background-size: 23px;
+    background-position: center;
+  }
+
+  input.ng-invalid.ng-touched {
+    border: 1px solid red;
+ }

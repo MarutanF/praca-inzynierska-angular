@@ -1,0 +1,55 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Waluta</th>
+            <th scope="col">Termin</th>
+            <th scope="col">Kwota</th>
+            <th scope="col"> </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let alert of alert$ | async; index as i">
+            <th style="width: 10%;" scope="row">{{ i + 1 }}</th>
+            <td style="width: 30%;">{{ alert.currencyCode }}</td>
+            <td style="width: 100%; min-width: 100px;">{{ alert.expireDate | date:'yyyy-MM-dd' }}</td>
+            <td style="width: 100%; max-width: 50px;">{{ alert.amount }}</td>
+            <td style="width: 10%;"><button type="button" class="btn btn-outline-danger"
+                        (click)="deleteAlert(alert)">Usuń</button></td>
+        </tr>
+        <tr>
+            <th scope="row"></th>
+            <td>
+                <ng-select [items]="listOfCurrencies" [(ngModel)]="selectedCurrency" [clearable]="false"
+                           bindLabel="name" groupBy="groupCode">
+                    <ng-template ng-notfound-tmp let-searchTerm="searchTerm">
+                        <div class="ng-option disabled">
+                            No data found for "{{searchTerm}}"
+                        </div>
+                    </ng-template>
+                </ng-select>
+            </td>
+            <td>
+                <form class="form-inline" #f="ngForm">
+                    <div class="form-group">
+                        <div class="input-group" style="padding-right: 20px;">
+                            <input class="form-control" placeholder="yyyy-mm-dd" name="dp" [(ngModel)]="selectedData"
+                                   ngbDatepicker #d="ngbDatepicker" [minDate]="getMinDate()" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                                        type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+            <td>
+                <form class="form-inline" #f2="ngForm">
+                    <input name="amountInput" class="form-control" type="number" [(ngModel)]="amount" required/>
+                </form>
+            </td>
+            <td><button type="button" class="btn btn-outline-success" [disabled]="!f.valid || !f2.valid"
+                        (click)="addAlert()">Dodaj</button></td>
+        </tr>
+    </tbody>
+</table>
