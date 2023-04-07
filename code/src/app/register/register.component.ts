@@ -10,7 +10,7 @@ import { NgForm } from '@angular/forms';
 })
 export class RegisterComponent implements OnInit {
 
-  @ViewChild('f', { static: false }) loginForm: NgForm;
+  @ViewChild('f') loginForm: NgForm;
   public errorMessage: string;
 
   constructor(
