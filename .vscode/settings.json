@@ -1,3 +1,4 @@
 {
-    "angular.view-engine": true
+    "angular.view-engine": true,
+    "favorites.resources": []
 }
