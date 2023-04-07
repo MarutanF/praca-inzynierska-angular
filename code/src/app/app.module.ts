@@ -4,13 +4,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartsModule, ThemeService } from 'ng2-charts';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { NgOptionHighlightModule } from '@ng-select/ng-option-highlight';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
@@ -55,7 +53,6 @@ import { AmountAlertsComponent } from './amount-alerts/amount-alerts.component';
     AppRoutingModule,
     FormsModule,
     NgSelectModule,
-    NgOptionHighlightModule,
     HttpClientModule
   ],
   providers: [
