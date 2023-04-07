@@ -19,23 +19,23 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    return await this.angularFireAuth.auth.signInWithEmailAndPassword(email, password);
+    return await this.angularFireAuth.signInWithEmailAndPassword(email, password);
   }
 
   async register(email: string, password: string) {
-    return await this.angularFireAuth.auth.createUserWithEmailAndPassword(email, password);
+    return await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
   }
 
   async sendEmailVerification() {
-    return await this.angularFireAuth.auth.currentUser.sendEmailVerification();
+    return await (await this.angularFireAuth.currentUser).sendEmailVerification();
   }
 
   async sendPasswordResetEmail(passwordResetEmail: string) {
-    return await this.angularFireAuth.auth.sendPasswordResetEmail(passwordResetEmail);
+    return await this.angularFireAuth.sendPasswordResetEmail(passwordResetEmail);
   }
 
   async logout() {
-    return await this.angularFireAuth.auth.signOut();
+    return await this.angularFireAuth.signOut();
   }
 
   isUserLogged(): boolean {
